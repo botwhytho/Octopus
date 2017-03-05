@@ -6,6 +6,8 @@ function love.load()
 end
 
 function love.update(dt)
+	if love.keyboard.isDown('escape') then love.event.quit() end
+	
 	player:handleInput()
 	player:update(dt)
 end
