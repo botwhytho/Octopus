@@ -30,8 +30,9 @@ local function jump(player, dt)
 	end
 end
 
-local function draw()
-	-- stuff
+local function draw(player)
+	love.graphics.setColor(100, 100, 100)
+	love.graphics.rectangle('fill', player.x, player.y, player.w, player.h)
 end
 
 -- Feed in sprites and stuff here as well eventually
@@ -51,6 +52,7 @@ function entity.create()
 	player.update = update
 	player.handleInput = handleInput
 	player.jump = jump
+	player.draw = draw
 
 	return player
 end
