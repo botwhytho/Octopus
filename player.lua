@@ -1,10 +1,13 @@
 local player = {}
 
-local function handleInput(player)
-	if love.keyboard.isDown('w') then
+local function handleInput(player, peakamp)
+	-- Set jump height to peakamp if not already jumping
+	if (peakamp or 0) > 30 and player.isJumping == false then
+		player.yVel = peakamp*-5
 		player.isJumping = true
 	end
 
+	-- Handle keyboard movement
 	if love.keyboard.isDown('d') or love.keyboard.isDown('right') then player.direction = 1
 	elseif love.keyboard.isDown('a') or love.keyboard.isDown('left') then player.direction = -1
 	else player.direction = 0
@@ -12,20 +15,13 @@ local function handleInput(player)
 end
 
 local function update(player, dt, peakamp)
-	if (peakamp or 0) > 30 and player.isJumping == false then
-		player.yVel = peakamp*-5
-		print(player.yVel)
-		player.isJumping = true
-	end
-
-	if player.isJumping then player:jump(dt) end
+	player:handleInput(peakamp)
 
 	player.x = player.x + player.direction * (player.speed * dt)
-
+	if player.isJumping then player:jump(dt) end
 end
 
 local function jump(player, dt)
-	--player.yVel = player.yVel or -400
 	local gravity = 900
 
 	player.y = player.y + player.yVel * dt
@@ -34,14 +30,13 @@ local function jump(player, dt)
 	if player.y >= love.graphics.getHeight()/1.2 - player.h then -- y-position of the ground
 		player.y = love.graphics.getHeight()/1.2 - player.h
 		player.isJumping = false
-		--player.yVel = 0
 	end
 end
 
 local function draw(player)
-	--love.graphics.setColor(100, 100, 100)
-	--love.graphics.rectangle('fill', player.x, player.y, player.w, player.h)
-	love.graphics.draw(player.sprite, player.x, player.y, 0, 0.35, 0.35)
+	love.graphics.setColor(100, 100, 100)
+	love.graphics.rectangle('fill', player.x, player.y, player.w, player.h)
+	--love.graphics.draw(player.sprite, player.x, player.y, 0, 0.35, 0.35)
 end
 
 function player.create(filepath)
@@ -52,7 +47,7 @@ function player.create(filepath)
 	player.x = 10
 	player.y = love.graphics.getHeight()/1.2 - player.h
 
-	player.direction = 1
+	player.direction = 0
 	player.speed = 200
 
 	player.isJumping = false
@@ -62,7 +57,6 @@ function player.create(filepath)
 	player.handleInput = handleInput
 	player.jump = jump
 	player.draw = draw
-
 	return player
 end
 
