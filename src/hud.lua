@@ -18,11 +18,11 @@ local function draw(hb)
    end
 end
 
-function hud.create(player, x, y)
+function hud.create(health, x, y)
    local inst = {}
    inst.x = x
    inst.y = y
-   inst.lives = player.health
+   inst.lives = health
 
    inst.draw = draw
    inst.update = update

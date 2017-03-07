@@ -10,7 +10,7 @@ function game.init(state, microphone)
    state.microphone = microphone
 
    state.player = entity.create('assets/shitsprites.png')
-   state.hud = hud.create(state.player, 100, 100)
+   state.hud = hud.create(state.player.health, 100, 100)
    state.level = scene
 
    state.enemies = {}
@@ -40,7 +40,7 @@ function game.update(state, dt, micAmp)
 
    if (checkCollision(state.player, state.enemies)) then
       state.player.health = state.player.health - 1
-      state.hud:update(state.player) -- why do I need to do this? Already passed reference
+      state.hud:update(state.player)
       state.player.x = state.player.x - 100
    end
 end

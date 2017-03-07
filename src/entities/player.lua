@@ -16,10 +16,6 @@ local function handleInput(player, peakAmp)
 	end
 end
 
-local function animate(dt)
-
-end
-
 local function update(player, dt, peakamp)
 	player.anim:update(dt)
 	player:handleInput(peakamp)
@@ -41,8 +37,11 @@ local function jump(player, dt)
 end
 
 local function draw(player)
-		local xscale = player.direction >= 0 and -0.5 or 0.5
-		love.graphics.draw(player.anim.spritesheet, player.anim.quads[player.anim.currFrame], player.x, player.y, 0, xscale, 1/2)
+	-- negative scale mirrors the sprite
+	local xscale = player.direction >= 0 and -0.5 or 0.5
+	--love.graphics.draw(player.anim.spritesheet, player.anim.quads[player.anim.currFrame], player.x, player.y, 0, xscale, 1/2)
+	love.graphics.setColor(1, 1, 1)
+	love.graphics.rectangle('fill', player.x, player.y, player.w, player.h)
 end
 
 function player.create(filepath)
