@@ -34,9 +34,7 @@ local function jump(player, dt)
 end
 
 local function draw(player)
-	love.graphics.setColor(100, 100, 100)
-	love.graphics.rectangle('fill', player.x, player.y, player.w, player.h)
-	--love.graphics.draw(player.sprite, player.x, player.y, 0, 0.35, 0.35)
+	love.graphics.draw(player.sprite, player.x, player.y, 0, 0.35, 0.35)
 end
 
 function player.create(filepath)

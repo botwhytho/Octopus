@@ -1,0 +1,3 @@
+[submodule "love-microphone"]
+	path = love-microphone
+	url = https://github.com/LPGhatguy/love-microphone.git
