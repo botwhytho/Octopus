@@ -1,8 +1,9 @@
-package.path = '/Users/Louise/Desktop/Octopus/microphone/?.lua;'..package.path
+package.path =  arg[1] .. '/love-microphone/?/init.lua;' .. arg[1] .. '/love-microphone/?.lua;' .. package.path
+print(package.path)
 local entity = require('player')
 local enemy = require('enemy')
 local scene = require('scene')
-local microphone = require('microphone')
+local microphone = require('love-microphone')
 local device, source
 
 function love.load()
@@ -23,6 +24,7 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.print({{0,0,0},love.timer.getFPS()}, 0,0)
 	scene:draw()
 	player:draw()
 end
