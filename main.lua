@@ -1,6 +1,6 @@
-package.path = '/Users/Louise/Desktop/Octopus/lib/microphone/?.lua;'..package.path
+package.path =  arg[1] .. '/love-microphone/?/init.lua;' .. arg[1] .. '/love-microphone/?.lua;' .. package.path
 local gamestate = require('src.game')
-local microphone = require('lib.microphone')
+local microphone = require('love-microphone')
 local device, source
 
 function love.load()
