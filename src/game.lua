@@ -7,20 +7,6 @@ local hud = require('src.hud')
 local swim = require('src.movement.swim')
 local object = require('src.entities.object')
 
-function game.init(state, microphone)
-   state.microphone = microphone
-
-   state.level = scene
-   state.player = entity.create('assets/shitsprites.png', 200, state.level.groundY)
-   state.hud = hud.create(state.player.health, 100, 100)
-
-   state.enemies = {}
-   table.insert(state.enemies, enemy.create('assets/fish.png', 200, 400, swim))
-   table.insert(state.enemies, enemy.create('assets/turtle.png', 400, state.level.groundY))
-
-   state.computer = object.create(30, state.player.y-50, 50, 50)
-end
-
 local function collision(player, others)
    -- if player's coordinates are outside of enemy's bounding box then we can't have collision
    for i, v in pairs(others) do
@@ -32,25 +18,34 @@ local function collision(player, others)
    return false
 end
 
+function game.init(state, microphone)
+   state.microphone = microphone
+
+   state.level = scene
+   state.player = entity.create('assets/shitsprites.png', 200, state.level.groundY)
+   state.hud = hud.create(state.player.health, 100, 100)
+
+   state.enemies = {}
+   table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), 400, swim))
+   table.insert(state.enemies, enemy.create('assets/turtle.png', 400, state.level.groundY))
+
+   state.computer = object.create(30, state.player.y-50, 50, 50)
+end
+
 function game.update(state, dt, micAmp)
    if love.keyboard.isDown('escape') then
       love.event.quit()
    end
 
-	state.player:update(dt, state.microphone:poll())
+   state.player:update(dt, state.microphone:poll())
    for i, v in pairs(state.enemies) do
       v:update(dt)
    end
 
    -- Handle collision
    if collision(state.player, state.enemies) then
-      if not state.player.collided then
-         state.player.collided = true
-         state.player.hasObject = false
-         state.player.health = state.player.health - 1
-         state.player.anim.blinking = true
-         state.hud:update(state.player.health)
-      end
+      state.player:handleCollision(state.computer)
+      state.hud:update(state.player.health)
    else
       state.player.collided = false
    end
@@ -64,10 +59,10 @@ function game.update(state, dt, micAmp)
    end
 
    if state.player.x > love.graphics.getWidth()/10*8.5 then --Change state when player scores
-     if state.player.hasObject then
-       state.player.score = state.player.score + 1
-       state.player.hasObject = false
-     end
+      if state.player.hasObject then
+         state.player.score = state.player.score + 1
+         state.player.hasObject = false
+      end
    end
 end
 

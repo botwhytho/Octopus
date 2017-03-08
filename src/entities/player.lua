@@ -24,6 +24,17 @@ local function update(player, dt, peakamp)
 	if player.isJumping then player:jump(dt) end
 end
 
+local function handleCollision(player)
+	if not player.collided then
+		player.collided = true
+		if player.hasObject then
+			player.hasObject = false
+		end
+		player.health = player.health - 1
+		player.anim.blinking = true
+	end
+end
+
 local function jump(player, dt)
 	local gravity = 900
 
@@ -44,9 +55,9 @@ local function draw(player)
 
 	-- negative scale mirrors the sprite
 	local xscale = player.direction >= 0 and -0.5 or 0.5
-	--love.graphics.draw(player.anim.spritesheet, player.anim.quads[player.anim.currFrame], player.x, player.y, 0, xscale, 1/2)
-	love.graphics.setColor(1, 1, 1)
-	love.graphics.rectangle('fill', player.x, player.y, player.w, player.h)
+	love.graphics.draw(player.anim.spritesheet, player.anim.quads[player.anim.currFrame], player.x, player.y, 0, xscale, 1/2, player.w)
+	--love.graphics.setColor(1, 1, 1)
+	--love.graphics.rectangle('fill', player.x, player.y, player.w, player.h)
 
 	-- Reset colour modulation
 	love.graphics.setColor(255, 255, 255)
@@ -61,7 +72,7 @@ function player.create(filepath, x, y)
 	player.y = y - player.h
 
 	player.direction = 0
-	player.speed = 200
+	player.speed = 300
 	player.health = 5
 	player.score = 0
 
@@ -72,6 +83,8 @@ function player.create(filepath, x, y)
 
 	player.update = update
 	player.handleInput = handleInput
+	player.handleCollision = handleCollision
+	player.shrinkOrGrow = shrinkOrGrow
 	player.jump = jump
 	player.draw = draw
 	return player
