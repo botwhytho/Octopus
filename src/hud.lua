@@ -6,6 +6,9 @@ local function update(hud, player)
 end
 
 local function draw(hb,player)
+    love.graphics.print({{0,0,0},love.timer.getFPS()}, 0, 0) -- Print instantaneous FPS
+    love.graphics.print({{0,0,0},player.isCarryingSomething and "Move those Computers!" or "Go grab another server" }, love.graphics.getWidth()/2, 0)
+    love.graphics.print({{0,0,0},"Score: " .. player.score}, love.graphics.getWidth()/2, love.graphics.getHeight()*.15)
    local x, y = hb.x, hb.y
    love.graphics.setColor(219, 78, 78)
    for i=1, hb.lives do
@@ -14,8 +17,7 @@ local function draw(hb,player)
    end
 
    if player.health < 1 then --Seems to draw before updating so first time around hud.lives (line 4) would be nil
-      love.graphics.setColor(0, 0, 0)
-      love.graphics.print('Dead', 400, 400)
+      love.graphics.print({{0,0,0},'Dead'}, love.graphics.getWidth()/2, love.graphics.getHeight()/3)
    end
 end
 

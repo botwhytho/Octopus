@@ -49,15 +49,17 @@ function player.create(filepath)
 	player.anim = anim.create(filepath, 4, 0.2, 100, 84)
 	player.w = 100/2
 	player.h = 84/2
-	player.x = 200
+	player.x = love.graphics.getHeight()/2.5
 	player.y = love.graphics.getHeight()/1.2 - player.h
 
 	player.direction = 0
 	player.speed = 200
 	player.health = 5
+  player.score = 0
 
 	player.isJumping = false
 	player.yVel = 0
+  player.isCarryingSomething = false
 
 	player.update = update
 	player.handleInput = handleInput
