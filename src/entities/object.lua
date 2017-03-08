@@ -4,7 +4,6 @@ local function update(object, player)
    if player.hasObject == true and object.held == false then
       object.held = true
    elseif player.hasObject == false and object.held == true then
-      print('dropped')
       object.held = false
       object.dropped = true
    end
@@ -13,14 +12,19 @@ local function update(object, player)
       object.x = player.x
       object.y = player.y - object.h
    end
-
-   -- If dropped then animation/reset? --
 end
 
 local function draw(object)
    love.graphics.setColor(120, 80, 12)
    love.graphics.rectangle('fill', object.x, object.y, object.w, object.h)
    love.graphics.setColor(255, 255, 255)
+end
+
+local function reset(object, x, y)
+   object.x = x
+   object.y = y
+   object.held = false
+   object.dropped = false
 end
 
 function object.create(x, y, w, h)
@@ -35,6 +39,7 @@ function object.create(x, y, w, h)
 
    inst.draw = draw
    inst.update = update
+   inst.reset = reset
 
    return inst
 end

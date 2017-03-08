@@ -1,6 +1,7 @@
 local level = {}
 
 level.groundY = love.graphics.getHeight()/1.2
+level.goalX = love.graphics.getWidth()/10*8.5 + 25
 
 local function draw(level)
    -- Draw yellow side bars

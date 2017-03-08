@@ -14,7 +14,6 @@ local function collision(player, others)
                player.y > (v.y + v.h) or (player.y + player.h) < v.y)
                then return true end
    end
-
    return false
 end
 
@@ -26,10 +25,11 @@ function game.init(state, microphone)
    state.hud = hud.create(state.player.health, 100, 100)
 
    state.enemies = {}
-   table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), 400, swim))
+   table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), 200, swim))
    table.insert(state.enemies, enemy.create('assets/turtle.png', 400, state.level.groundY))
 
    state.computer = object.create(30, state.player.y-50, 50, 50)
+   state.goal = enemy.create('assets/octo.png', state.level.goalX, state.level.groundY)
 end
 
 function game.update(state, dt, micAmp)
@@ -44,24 +44,34 @@ function game.update(state, dt, micAmp)
 
    -- Handle collision
    if collision(state.player, state.enemies) then
-      state.player:handleCollision(state.computer)
+      if state.player.hasObject then state.computer:reset(30, state.level.groundY-state.player.h-50) end
+      state.player:handleCollision()
       state.hud:update(state.player.health)
    else
       state.player.collided = false
    end
 
+   if collision(state.computer, state.enemies) then
+      state.player.hasObject = false
+      state.computer:reset(30, state.level.groundY-state.player.h-50)
+   end
+
    -- Needs to be updated after collision logic and before pick-up logic for accurate 'dropped' values
    state.computer:update(state.player)
 
-   -- Handle objects
-   if state.player.x <= state.computer.x + ((state.computer.x + state.computer.w) / 4) and not state.player.hasObject and not state.computer.dropped then
+   -- Pick up object if player is 'near enough'
+   if state.player.x <= state.computer.x + ((state.computer.x + state.computer.w) / 4)
+      and (state.player.y <= state.computer.y+state.computer.h+10 and state.player.y >= state.computer.y+state.computer.h-5)
+      and not state.player.hasObject and not state.computer.dropped then
       state.player.hasObject = true
    end
 
+   -- Drop off object
    if state.player.x > love.graphics.getWidth()/10*8.5 then --Change state when player scores
       if state.player.hasObject then
          state.player.score = state.player.score + 1
          state.player.hasObject = false
+         state.computer:reset(30, state.level.groundY-state.player.h-50)
       end
    end
 end
@@ -75,6 +85,7 @@ function game.draw(state)
    end
 
    state.computer:draw()
+   state.goal:draw()
 
    state.hud:draw(state.player)
 end
