@@ -40,6 +40,7 @@ function game.update(state, dt, micAmp)
 
    if (checkCollision(state.player, state.enemies)) then
       state.player.health = state.player.health - 1
+      -- if state.player.health == 0 then love.event.quit("restart") end --Placeholder for losing game
       state.hud:update(state.player)
       state.player.x = state.player.x - 100
    end
@@ -53,7 +54,7 @@ function game.draw(state)
       v:draw()
    end
 
-   state.hud:draw()
+   state.hud:draw(state.player)
 end
 
 return game
