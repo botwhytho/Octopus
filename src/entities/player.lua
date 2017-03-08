@@ -37,11 +37,17 @@ local function jump(player, dt)
 end
 
 local function draw(player)
+	-- Blink if player is hurt
+	if player.anim.blinking and player.anim.blinkOn then
+		love.graphics.setColor(255, 255, 255, 50)
+	end
+
 	-- negative scale mirrors the sprite
-	--local xscale = player.direction >= 0 and -0.5 or 0.5
-	--love.graphics.draw(player.anim.spritesheet, player.anim.quads[player.anim.currFrame], player.x, player.y, 0, xscale, 1/2)
-	love.graphics.setColor(1, 1, 1)
-	love.graphics.rectangle('fill', player.x, player.y, player.w, player.h)
+	local xscale = player.direction >= 0 and -0.5 or 0.5
+	love.graphics.draw(player.anim.spritesheet, player.anim.quads[player.anim.currFrame], player.x, player.y, 0, xscale, 1/2)
+	--love.graphics.rectangle('fill', player.x, player.y, player.w, player.h)
+
+	-- Reset colour modulation
 	love.graphics.setColor(255, 255, 255)
 end
 

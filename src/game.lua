@@ -44,9 +44,9 @@ function game.update(state, dt, micAmp)
          state.player.collided = true
          state.player.hasObject = false
          state.player.health = state.player.health - 1
+         state.player.anim.blinking = true
          -- if state.player.health == 0 then love.event.quit("restart") end --Placeholder for losing game
          state.hud:update(state.player.health)
-         -- state.player.x = state.player.x - 20 --Maybe blink player
       end
    else
       state.player.collided = false
