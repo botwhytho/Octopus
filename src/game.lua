@@ -45,7 +45,6 @@ function game.update(state, dt, micAmp)
          state.player.hasObject = false
          state.player.health = state.player.health - 1
          state.player.anim.blinking = true
-         -- if state.player.health == 0 then love.event.quit("restart") end --Placeholder for losing game
          state.hud:update(state.player.health)
       end
    else
@@ -57,12 +56,10 @@ function game.update(state, dt, micAmp)
    end
 
    if state.player.x > love.graphics.getWidth()/10*8.5 then --Change state when player scores
-     if state.player.hasObject then print('hasobject')
+     if state.player.hasObject then
        state.player.score = state.player.score + 1
-       print(state.player.score)
+       state.player.hasObject = false
      end
-     -- If the player reached goal, immediately set hasObject to false to score doesn't increase on each frame
-     state.player.hasObject = false
    end
 
 end
