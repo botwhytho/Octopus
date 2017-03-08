@@ -3,8 +3,8 @@ anim = require('src.movement.animation')
 local player = {}
 
 local function handleInput(player, peakAmp)
-	-- Set jump height to peakAmp if not already jumping
-	if (peakAmp or 0) > 30 and player.isJumping == false then
+	-- Set jump height to peakAmp even if already jumping
+	if (peakAmp or 0) > 30 then
 		player.yVel = peakAmp*-5
 		player.isJumping = true
 	end
