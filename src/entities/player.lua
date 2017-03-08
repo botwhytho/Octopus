@@ -3,8 +3,8 @@ anim = require('src.movement.animation')
 local player = {}
 
 local function handleInput(player, peakAmp)
-	-- Set jump height to peakAmp if not already jumping
-	if (peakAmp or 0) > 30 and player.isJumping == false then
+	-- Set jump height to peakAmp even if already jumping
+	if (peakAmp or 0) > 30 then
 		player.yVel = peakAmp*-5
 		player.isJumping = true
 	end
@@ -39,9 +39,9 @@ end
 local function draw(player)
 	-- negative scale mirrors the sprite
 	local xscale = player.direction >= 0 and -0.5 or 0.5
-	--love.graphics.draw(player.anim.spritesheet, player.anim.quads[player.anim.currFrame], player.x, player.y, 0, xscale, 1/2)
-	love.graphics.setColor(1, 1, 1)
-	love.graphics.rectangle('fill', player.x, player.y, player.w, player.h)
+	love.graphics.draw(player.anim.spritesheet, player.anim.quads[player.anim.currFrame], player.x, player.y, 0, xscale, 1/2)
+	-- love.graphics.setColor(1, 1, 1)
+	-- love.graphics.rectangle('fill', player.x, player.y, player.w, player.h)
 end
 
 function player.create(filepath)
@@ -49,15 +49,18 @@ function player.create(filepath)
 	player.anim = anim.create(filepath, 4, 0.2, 100, 84)
 	player.w = 100/2
 	player.h = 84/2
-	player.x = 200
+	player.x = love.graphics.getHeight()/2.5
 	player.y = love.graphics.getHeight()/1.2 - player.h
 
 	player.direction = 0
 	player.speed = 200
 	player.health = 5
+  player.score = 0
 
 	player.isJumping = false
 	player.yVel = 0
+  player.isCarryingSomething = false
+  player.notColliding = true
 
 	player.update = update
 	player.handleInput = handleInput

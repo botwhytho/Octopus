@@ -25,6 +25,7 @@ local function checkCollision(player, others)
                player.y > (v.y + v.h) or (player.y + player.h) < v.y)
                then return true end
    end
+
    return false
 end
 
@@ -38,11 +39,33 @@ function game.update(state, dt, micAmp)
       v:update(dt)
    end
 
-   if (checkCollision(state.player, state.enemies)) then
-      state.player.health = state.player.health - 1
-      state.hud:update(state.player)
-      state.player.x = state.player.x - 100
+   if checkCollision(state.player, state.enemies) then
+     if state.player.notColliding then
+        state.player.notColliding = false
+        state.player.isCarryingSomething = false
+        state.player.health = state.player.health - 1
+        -- if state.player.health == 0 then love.event.quit("restart") end --Placeholder for losing game
+        state.hud:update(state.player)
+        -- state.player.x = state.player.x - 20 --Maybe blink player
+      end
+    else
+      state.player.notColliding = true
    end
+
+   if state.player.x + state.player.w < love.graphics.getWidth()/10*1.5 then --Change state when player gets a computer
+     state.player.isCarryingSomething = true and state.player.isCarryingSomething or true
+   end
+
+   if state.player.x > love.graphics.getWidth()/10*8.5 then --Change state when player scores
+     if state.player.isCarryingSomething then
+       state.player.score = state.player.score + 1
+     end
+     --[[If the player reaches the goal without losing health, immediately
+        set isCarryingSomething to false to score doesn't increase on each frame
+     ]]
+     state.player.isCarryingSomething = state.player.isCarryingSomething and false
+   end
+
 end
 
 function game.draw(state)
@@ -53,7 +76,7 @@ function game.draw(state)
       v:draw()
    end
 
-   state.hud:draw()
+   state.hud:draw(state.player)
 end
 
 return game
