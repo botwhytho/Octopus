@@ -8,9 +8,11 @@ local swim = require('src.movement.swim')
 local object = require('src.entities.object')
 
 function game.init(state, microphone)
+   state.countdown = love.timer.getTime()
    state.microphone = microphone
 
    state.level = scene
+   state.levelDuration = 15
    state.player = entity.create('assets/shitsprites.png', 200, state.level.groundY)
    state.hud = hud.create(state.player.health, 100, 100)
 
@@ -35,6 +37,15 @@ end
 function game.update(state, dt, micAmp)
    if love.keyboard.isDown('escape') then
       love.event.quit()
+   end
+
+   --Level Duration logic
+   if state.levelDuration > 0 then
+     local now = love.timer.getTime()
+     if now - state.countdown > 1 then
+       state.countdown = now
+       state.levelDuration = state.levelDuration - 1
+     end
    end
 
 	state.player:update(dt, state.microphone:poll())
@@ -81,7 +92,7 @@ function game.draw(state)
 
    state.computer:draw()
 
-   state.hud:draw(state.player)
+   state.hud:draw(state.player,state)
 end
 
 return game
