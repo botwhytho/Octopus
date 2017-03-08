@@ -7,6 +7,21 @@ local hud = require('src.hud')
 local swim = require('src.movement.swim')
 local object = require('src.entities.object')
 
+
+local function collision(player, others, xTol, yTol)
+   -- Negative tolerance value causes bounding box to shrink (less lenient)
+   xTol = xTol or 0
+   yTol = yTol or 0
+
+   -- if player's coordinates are outside of enemy's bounding box then we can't have collision
+   for i, v in pairs(others) do
+      if not ((player.x + player.w) < v.x-xTol  or player.x-xTol > (v.x + v.w) or
+               player.y-yTol > (v.y + v.h) or (player.y + player.h) < v.y-yTol)
+               then return true end
+   end
+   return false
+end
+
 function game.init(state, microphone)
    state.countdown = love.timer.getTime()
    state.microphone = microphone
@@ -17,21 +32,11 @@ function game.init(state, microphone)
    state.hud = hud.create(state.player.health, 100, 100)
 
    state.enemies = {}
-   table.insert(state.enemies, enemy.create('assets/fish.png', 200, 400, swim))
+   table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), 200, swim))
    table.insert(state.enemies, enemy.create('assets/turtle.png', 400, state.level.groundY))
 
    state.computer = object.create(30, state.player.y-50, 50, 50)
-end
-
-local function collision(player, others)
-   -- if player's coordinates are outside of enemy's bounding box then we can't have collision
-   for i, v in pairs(others) do
-      if not ((player.x + player.w) < v.x  or player.x > (v.x + v.w) or
-               player.y > (v.y + v.h) or (player.y + player.h) < v.y)
-               then return true end
-   end
-
-   return false
+   state.goal = enemy.create('assets/octo.png', state.level.goalX, state.level.groundY)
 end
 
 function game.update(state, dt, micAmp)
@@ -48,37 +53,42 @@ function game.update(state, dt, micAmp)
      end
    end
 
-	state.player:update(dt, state.microphone:poll())
+	 state.player:update(dt, state.microphone:poll())
+
    for i, v in pairs(state.enemies) do
       v:update(dt)
    end
 
    -- Handle collision
    if collision(state.player, state.enemies) then
-      if not state.player.collided then
-         state.player.collided = true
-         state.player.hasObject = false
-         state.player.health = state.player.health - 1
-         state.player.anim.blinking = true
-         state.hud:update(state.player.health)
-      end
+      if state.player.hasObject then state.computer:reset(30, state.level.groundY-state.player.h-50) end
+      state.player:handleCollision()
+      state.hud:update(state.player.health)
    else
       state.player.collided = false
+   end
+
+   if collision(state.computer, state.enemies) then
+      state.player.hasObject = false
+      state.computer:reset(30, state.level.groundY-state.player.h-50)
    end
 
    -- Needs to be updated after collision logic and before pick-up logic for accurate 'dropped' values
    state.computer:update(state.player)
 
-   -- Handle objects
-   if state.player.x <= state.computer.x + ((state.computer.x + state.computer.w) / 4) and not state.player.hasObject and not state.computer.dropped then
+   -- Pick up object if player is 'near enough'
+   if collision(state.player, {state.computer}, -10, 10)
+      and not state.player.hasObject and not state.computer.dropped then
       state.player.hasObject = true
    end
 
-   if state.player.x > love.graphics.getWidth()/10*8.5 then --Change state when player scores
-     if state.player.hasObject then
-       state.player.score = state.player.score + 1
-       state.player.hasObject = false
-     end
+   -- Drop off object
+   if collision(state.player, {state.goal}, -(state.goal.w/2), -(state.goal.w/2)) then
+      if state.player.hasObject then
+         state.player.score = state.player.score + 1
+         state.player.hasObject = false
+         state.computer:reset(30, state.level.groundY-state.player.h-50)
+      end
    end
 end
 
@@ -91,6 +101,7 @@ function game.draw(state)
    end
 
    state.computer:draw()
+   state.goal:draw()
 
    state.hud:draw(state.player,state)
 end
