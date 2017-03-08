@@ -7,11 +7,16 @@ local hud = require('src.hud')
 local swim = require('src.movement.swim')
 local object = require('src.entities.object')
 
-local function collision(player, others)
+
+local function collision(player, others, xTol, yTol)
+   -- Negative tolerance value causes bounding box to shrink (less lenient)
+   xTol = xTol or 0
+   yTol = yTol or 0
+
    -- if player's coordinates are outside of enemy's bounding box then we can't have collision
    for i, v in pairs(others) do
-      if not ((player.x + player.w) < v.x  or player.x > (v.x + v.w) or
-               player.y > (v.y + v.h) or (player.y + player.h) < v.y)
+      if not ((player.x + player.w) < v.x-xTol  or player.x-xTol > (v.x + v.w) or
+               player.y-yTol > (v.y + v.h) or (player.y + player.h) < v.y-yTol)
                then return true end
    end
    return false
@@ -60,14 +65,13 @@ function game.update(state, dt, micAmp)
    state.computer:update(state.player)
 
    -- Pick up object if player is 'near enough'
-   if state.player.x <= state.computer.x + ((state.computer.x + state.computer.w) / 4)
-      and (state.player.y <= state.computer.y+state.computer.h+10 and state.player.y >= state.computer.y+state.computer.h-5)
+   if collision(state.player, {state.computer}, -10, 10)
       and not state.player.hasObject and not state.computer.dropped then
       state.player.hasObject = true
    end
 
    -- Drop off object
-   if state.player.x > love.graphics.getWidth()/10*8.5 then --Change state when player scores
+   if collision(state.player, {state.goal}, -(state.goal.w/2), -(state.goal.w/2)) then
       if state.player.hasObject then
          state.player.score = state.player.score + 1
          state.player.hasObject = false
