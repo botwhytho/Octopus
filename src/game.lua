@@ -39,11 +39,17 @@ function game.update(state, dt, micAmp)
       v:update(dt)
    end
 
-   if (checkCollision(state.player, state.enemies)) then
-      state.player.health = state.player.health - 1
-      -- if state.player.health == 0 then love.event.quit("restart") end --Placeholder for losing game
-      state.hud:update(state.player)
-      state.player.x = state.player.x - 100
+   if checkCollision(state.player, state.enemies) then
+     if state.player.notColliding then
+        state.player.notColliding = false
+        state.player.isCarryingSomething = false
+        state.player.health = state.player.health - 1
+        -- if state.player.health == 0 then love.event.quit("restart") end --Placeholder for losing game
+        state.hud:update(state.player)
+        -- state.player.x = state.player.x - 20 --Maybe blink player
+      end
+    else
+      state.player.notColliding = true
    end
 
    if state.player.x + state.player.w < love.graphics.getWidth()/10*1.5 then --Change state when player gets a computer

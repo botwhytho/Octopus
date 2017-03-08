@@ -60,6 +60,7 @@ function player.create(filepath)
 	player.isJumping = false
 	player.yVel = 0
   player.isCarryingSomething = false
+  player.notColliding = true
 
 	player.update = update
 	player.handleInput = handleInput
