@@ -18,7 +18,7 @@ function enemy.create(filepath, x, y, mov)
    instance.w = instance.sprite:getWidth()/2
    instance.h = instance.sprite:getHeight()/2
    instance.x = x
-   instance.y = y
+   instance.y = y - instance.h
 
    instance.movement = mov
 

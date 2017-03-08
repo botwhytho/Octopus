@@ -9,16 +9,16 @@ local swim = require('src.movement.swim')
 function game.init(state, microphone)
    state.microphone = microphone
 
-   state.player = entity.create('assets/shitsprites.png')
-   state.hud = hud.create(state.player.health, 100, 100)
    state.level = scene
+   state.player = entity.create('assets/shitsprites.png', 200, state.level.groundY)
+   state.hud = hud.create(state.player.health, 100, 100)
 
    state.enemies = {}
    table.insert(state.enemies, enemy.create('assets/fish.png', 200, 400, swim))
-   table.insert(state.enemies, enemy.create('assets/turtle.png', 400, state.player.y))
+   table.insert(state.enemies, enemy.create('assets/turtle.png', 400, state.level.groundY))
 end
 
-local function checkCollision(player, others)
+local function collision(player, others)
    -- if player's coordinates are outside of enemy's bounding box then we can't have collision
    for i, v in pairs(others) do
       if not ((player.x + player.w) < v.x  or player.x > (v.x + v.w) or
@@ -39,31 +39,30 @@ function game.update(state, dt, micAmp)
       v:update(dt)
    end
 
-   if checkCollision(state.player, state.enemies) then
-     if state.player.notColliding then
-        state.player.notColliding = false
-        state.player.isCarryingSomething = false
-        state.player.health = state.player.health - 1
-        -- if state.player.health == 0 then love.event.quit("restart") end --Placeholder for losing game
-        state.hud:update(state.player)
-        -- state.player.x = state.player.x - 20 --Maybe blink player
+   if collision(state.player, state.enemies) then
+      if not state.player.collided then
+         state.player.collided = true
+         state.player.hasObject = false
+         state.player.health = state.player.health - 1
+         -- if state.player.health == 0 then love.event.quit("restart") end --Placeholder for losing game
+         state.hud:update(state.player.health)
+         -- state.player.x = state.player.x - 20 --Maybe blink player
       end
-    else
-      state.player.notColliding = true
+   else
+      state.player.collided = false
    end
 
    if state.player.x + state.player.w < love.graphics.getWidth()/10*1.5 then --Change state when player gets a computer
-     state.player.isCarryingSomething = true and state.player.isCarryingSomething or true
+     state.player.hasObject = true
    end
 
    if state.player.x > love.graphics.getWidth()/10*8.5 then --Change state when player scores
-     if state.player.isCarryingSomething then
+     if state.player.hasObject then print('hasobject')
        state.player.score = state.player.score + 1
+       print(state.player.score)
      end
-     --[[If the player reaches the goal without losing health, immediately
-        set isCarryingSomething to false to score doesn't increase on each frame
-     ]]
-     state.player.isCarryingSomething = state.player.isCarryingSomething and false
+     -- If the player reached goal, immediately set hasObject to false to score doesn't increase on each frame
+     state.player.hasObject = false
    end
 
 end
