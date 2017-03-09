@@ -23,14 +23,17 @@ local function collision(player, others, xTol, yTol)
 end
 
 function game.init(state, microphone)
+   state.countdown = love.timer.getTime()
    state.microphone = microphone
 
    state.level = scene
+   state.levelDuration = 45
    state.player = entity.create('assets/shitsprites.png', 200, state.level.groundY)
    state.hud = hud.create(state.player.health, 100, 100)
 
    state.enemies = {}
    table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), 200, swim))
+   table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth()*1.25, 300, swim))
    table.insert(state.enemies, enemy.create('assets/turtle.png', 400, state.level.groundY))
 
    state.computer = object.create(30, state.player.y-50, 50, 50)
@@ -42,7 +45,20 @@ function game.update(state, dt, micAmp)
       love.event.quit()
    end
 
-   state.player:update(dt, state.microphone:poll())
+   -- 'Pause' game if time runs out
+   if state.levelDuration > 0 then
+
+   --Level Duration logic
+   if state.levelDuration > 0 then
+     local now = love.timer.getTime()
+     if now - state.countdown > 1 then
+       state.countdown = now
+       state.levelDuration = state.levelDuration - 1
+     end
+   end
+
+	 state.player:update(dt, state.microphone:poll())
+
    for i, v in pairs(state.enemies) do
       v:update(dt)
    end
@@ -78,20 +94,23 @@ function game.update(state, dt, micAmp)
          state.computer:reset(30, state.level.groundY-state.player.h-50)
       end
    end
+
+ end
+
 end
 
 function game.draw(state)
    state.level:draw()
 
-   state.player:draw()
    for i, v in pairs(state.enemies) do
       v:draw()
    end
+   state.player:draw()
 
    state.computer:draw()
    state.goal:draw()
 
-   state.hud:draw(state.player)
+   state.hud:draw(state.player,state)
 end
 
 return game

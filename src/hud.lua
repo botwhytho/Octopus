@@ -4,10 +4,15 @@ local function update(hud, health)
    hud.lives = health
 end
 
-local function draw(hb,player)
-    love.graphics.print({{0,0,0},love.timer.getFPS()}, 0, 0) -- Print instantaneous FPS
+local function draw(hb,player,state)
+    -- Print instantaneous FPS
+    love.graphics.print({{0,0,0},love.timer.getFPS()}, 0, 0)
+    -- Print state of dropped object
     love.graphics.print({{0,0,0},player.hasObject and "Move those Computers!" or "Go grab another server" }, love.graphics.getWidth()/2, 0)
+    -- Print current score
     love.graphics.print({{0,0,0},"Score: " .. player.score}, love.graphics.getWidth()/2, love.graphics.getHeight()*.15)
+    -- Print countdown timer
+    love.graphics.print({{0,0,0},"Time Left: " .. state.levelDuration}, love.graphics.getWidth()/2, love.graphics.getHeight()*.20)
 
    -- Print player's lives
    local x, y = hb.x, hb.y

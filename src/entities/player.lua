@@ -9,9 +9,9 @@ local function handleInput(player, peakAmp)
 		player.isJumping = true
 	end
 
-	-- Handle keyboard movement
-	if love.keyboard.isDown('d') or love.keyboard.isDown('right') then player.direction = 1
-	elseif love.keyboard.isDown('a') or love.keyboard.isDown('left') then player.direction = -1
+	-- Handle keyboard movement & Prevent player from moving outside of the screen
+	if love.keyboard.isDown('d') or love.keyboard.isDown('right') and player.x + player.w < love.graphics.getWidth() then player.direction = 1
+	elseif love.keyboard.isDown('a') or love.keyboard.isDown('left') and player.x > 0 then player.direction = -1
 	else player.direction = 0
 	end
 end
@@ -54,10 +54,12 @@ local function draw(player)
 	end
 
 	-- negative scale mirrors the sprite
-	--local xscale = player.direction >= 0 and -0.5 or 0.5
-	--love.graphics.draw(player.anim.spritesheet, player.anim.quads[player.anim.currFrame], player.x, player.y, 0, xscale, 1/2, player.w)
-	love.graphics.setColor(1, 1, 1)
-	love.graphics.rectangle('fill', player.x, player.y, player.w, player.h)
+	local xscale = player.direction >= 0 and -0.5 or 0.5
+  local xoffset = player.direction >= 0 and 0 or player.w
+	love.graphics.draw(player.anim.spritesheet, player.anim.quads[player.anim.currFrame], player.x + xoffset, player.y, 0, xscale, 1/2,player.w*2)
+	-- love.graphics.setColor(1, 1, 1)
+	-- love.graphics.rectangle('fill', player.x, player.y, player.w, player.h)
+
 
 	-- Reset colour modulation
 	love.graphics.setColor(255, 255, 255)

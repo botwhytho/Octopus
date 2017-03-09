@@ -21,8 +21,8 @@ swim.speed = 300
 swim.direction = -1
 
 swim.yDirection = 1
-swim.ySpeed = 50
-swim.maxJiggle = 20
+swim.ySpeed = 200
+swim.maxJiggle = 80
 swim.currJiggle = 0
 
 
