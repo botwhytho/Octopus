@@ -1,10 +1,14 @@
 local enemy = {}
 
 local function draw(enemy)
-      local xscale = ((enemy.movement and enemy.movement.direction) == 1) and -0.5 or 0.5
-
-      love.graphics.draw(enemy.anim.spritesheet, enemy.anim.quads[enemy.anim.currFrame], enemy.x, enemy.y, 0, xscale, 1/2)
-      --love.graphics.draw(enemy.sprite, enemy.x, enemy.y, 0, xscale, 0.5)
+   -- negative scale mirrors the sprite
+   local xscale, xoffset = 0.5, 0
+   if enemy.movement then
+      xscale = (enemy.movement.direction or 0) >= 0 and -0.5 or 0.5
+      xoffset = (enemy.movement.direction or 0) <= 0 and 0 or enemy.w
+   end
+   love.graphics.draw(enemy.anim.spritesheet, enemy.anim.quads[enemy.anim.currFrame], enemy.x + xoffset, enemy.y, 0, xscale, 1/2)
+   --love.graphics.draw(enemy.sprite, enemy.x, enemy.y, 0, xscale, 0.5)
 end
 
 local function update(enemy, dt)

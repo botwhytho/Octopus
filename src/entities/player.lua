@@ -56,11 +56,8 @@ local function draw(player)
 
 	-- negative scale mirrors the sprite
 	local xscale = player.direction >= 0 and -0.5 or 0.5
-  local xoffset = player.direction >= 0 and 0 or player.w
+  	local xoffset = player.direction >= 0 and 0 or player.w
 	love.graphics.draw(player.anim.spritesheet, player.anim.quads[player.anim.currFrame], player.x + xoffset, player.y, 0, xscale, 1/2,player.w*2)
-	-- love.graphics.setColor(1, 1, 1)
-	-- love.graphics.rectangle('fill', player.x, player.y, player.w, player.h)
-
 
 	-- Reset colour modulation
 	love.graphics.setColor(255, 255, 255)

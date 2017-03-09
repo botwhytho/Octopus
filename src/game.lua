@@ -5,6 +5,7 @@ local enemy = require('src.entities.enemy')
 local scene = require('src.scene')
 local hud = require('src.hud')
 local swim = require('src.movement.swim')
+local exit = require('src.movement.exitScreen')
 local object = require('src.entities.object')
 --local menu = require('src.menu')
 
@@ -41,8 +42,9 @@ function game.init(state, microphone, changeState)
    table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth()*1.25, 300, swim.create()))
    table.insert(state.enemies, enemy.create('assets/turtle.png', 400, state.level.groundY))
 
-   state.computer = object.create(30, state.player.y-50, 50, 50)
-   state.goal = enemy.create('assets/octo.png', state.level.goalX, state.level.groundY)
+   state.computer = object.create('assets/recurseLogo.png', 30, state.player.y, 50, 62.5)
+   state.goal = enemy.create('assets/octo.png', state.level.goalX, state.level.groundY, exit.create(state.level.goalX))
+   state.goal.hasObject = false
 end
 
 function game.update(state, dt)
@@ -54,7 +56,6 @@ function game.update(state, dt)
       end
    end
 
-
    -- 'Pause' game if time runs out
    if not state.pause and state.levelDuration > 0 then
 
@@ -65,46 +66,48 @@ function game.update(state, dt)
          state.levelDuration = state.levelDuration - 1
       end
 
-
       state.player:update(dt, state.microphone:poll())
 
       for i, v in pairs(state.enemies) do
          v:update(dt)
       end
 
-      -- Handle collision
+      -- Player collision with enemies
       if collision(state.player, state.enemies) then
-         if state.player.hasObject then state.computer:reset(30, state.level.groundY-state.player.h-50) end
+         if state.player.hasObject then state.computer:reset() end
          state.player:handleCollision()
       else
          state.player.collided = false
       end
 
+      -- Computer collision with enemies
       if collision(state.computer, state.enemies) then
          state.player.hasObject = false
-         state.computer:reset(30, state.level.groundY-state.player.h-50)
+         state.computer:reset()
       end
-
-      -- Needs to be updated after collision logic and before pick-up logic for accurate 'dropped' values
-      state.computer:update(state.player)
 
       -- Pick up object if player is 'near enough'
       if collision(state.player, {state.computer}, -10, 10)
-      and not state.player.hasObject and not state.computer.dropped then
+      and not state.player.hasObject and not state.goal.hasObject then
          state.player.hasObject = true
       end
+
+      -- If computer was picked up: stick to player
+      state.computer:update(state.player, dt)
+      state.computer:update(state.goal, dt)
 
       -- Drop off object
       if collision(state.player, {state.goal}, -(state.goal.w/2), -(state.goal.w/2)) then
          if state.player.hasObject then
             state.player.score = state.player.score + 1
             state.player.hasObject = false
-            state.computer:reset(30, state.level.groundY-state.player.h-50)
+            state.goal.hasObject = true
          end
       end
 
+      -- Handle object drop-off
+      state.goal:update(dt)
    end
-
 end
 
 function game.draw(state)
@@ -113,8 +116,8 @@ function game.draw(state)
    for i, v in pairs(state.enemies) do
       v:draw()
    end
-   state.player:draw()
 
+   state.player:draw()
    state.computer:draw()
    state.goal:draw()
 

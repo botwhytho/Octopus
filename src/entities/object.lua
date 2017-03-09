@@ -1,41 +1,44 @@
+local animation = require('src.movement.animation')
+
 local object = {}
 
 local function update(object, player)
    if player.hasObject == true and object.held == false then
       object.held = true
-   elseif player.hasObject == false and object.held == true then
-      object.held = false
-      object.dropped = true
    end
 
-   if object.held then
-      object.x = player.x
+   if player.hasObject then
+      object.x = player.x + ((player.w-object.w)/2)
       object.y = player.y - object.h
+
+      if object.x > love.graphics.getWidth() then
+         object:reset()
+      end
    end
 end
 
 local function draw(object)
-   love.graphics.setColor(120, 80, 12)
-   love.graphics.rectangle('fill', object.x, object.y, object.w, object.h)
-   love.graphics.setColor(255, 255, 255)
+   love.graphics.draw(object.sprite, object.x, object.y, 0, 0.45, 0.45)
 end
 
-local function reset(object, x, y)
-   object.x = x
-   object.y = y
+local function reset(object)
+   object.x = object.originX
+   object.y = object.originY
    object.held = false
-   object.dropped = false
 end
 
-function object.create(x, y, w, h)
+function object.create(filepath, x, y, w, h)
    local inst = {}
-
+   
+   inst.sprite = love.graphics.newImage(filepath)
+   inst.w = inst.sprite:getWidth()*0.45
+   inst.h = inst.sprite:getHeight()*0.45
    inst.x = x
-   inst.y = y
-   inst.w = w
-   inst.h = h
+   inst.y = y - inst.h
+
+   inst.originX = inst.x
+   inst.originY = inst.y
    inst.held = false
-   inst.dropped = false
 
    inst.draw = draw
    inst.update = update
