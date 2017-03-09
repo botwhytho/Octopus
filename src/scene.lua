@@ -1,7 +1,8 @@
+local c = require('src.constants')
 local level = {}
 
-level.groundY = love.graphics.getHeight()/1.2
-level.goalX = love.graphics.getWidth()/10*8.5 + 25
+level.groundY = c.GROUND_Y
+level.goalX = c.GOAL_X
 
 local function draw(level)
   -- Draw ground

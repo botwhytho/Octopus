@@ -7,8 +7,7 @@ local hud = require('src.hud')
 local swim = require('src.movement.swim')
 local exit = require('src.movement.exitScreen')
 local object = require('src.entities.object')
---local menu = require('src.menu')
-
+-- local c = require('src.constants')
 
 local function collision(player, others, xTol, yTol)
    -- Negative tolerance value causes bounding box to shrink (less lenient)
@@ -25,7 +24,7 @@ local function collision(player, others, xTol, yTol)
 end
 
 function game.init(state, microphone, changeState)
-   local font = love.graphics.newFont('assets/GreenFlame.ttf', 12)
+   local font = love.graphics.newFont('assets/GreenFlame.ttf', c.BODY_SIZE)
    love.graphics.setFont(font)
 
    state.oldTime = love.timer.getTime()
@@ -33,8 +32,8 @@ function game.init(state, microphone, changeState)
 
    state.pause = false
    state.level = scene
-   state.levelDuration = 45
-   state.player = entity.create('assets/shitsprites.png', 200, state.level.groundY)
+   state.levelDuration = c.LVL_DURATION
+   state.player = entity.create('assets/shitsprites.png', c.PLAYER_X, c.PLAYER_Y)
    state.hud = hud.create(state.player.health, 100, 100)
 
    state.enemies = {}
@@ -42,7 +41,7 @@ function game.init(state, microphone, changeState)
    table.insert(state.enemies, enemy.create('assets/fish2.png', -50, 300, swim.create()))
    table.insert(state.enemies, enemy.create('assets/turtle.png', 400, state.level.groundY))
 
-   state.computer = object.create('assets/recurseLogo.png', 30, state.player.y, 50, 62.5)
+   state.computer = object.create('assets/recurseLogo.png', c.OBJECT_X, c.PLAYER_Y - state.player.h)
    state.goal = enemy.create('assets/crab.png', state.level.goalX, state.level.groundY, exit.create(state.level.goalX))
    state.goal.hasObject = false
 end

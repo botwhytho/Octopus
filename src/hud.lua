@@ -24,14 +24,14 @@ local function draw(hb, player, levelDuration, paused)
 
    if paused then
       -- Dark overlay
-      love.graphics.setColor(1, 1, 1, 170)
+      love.graphics.setColor(0, 0, 0, 170)
       love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 
       -- Paused text
-      love.graphics.setColor(1, 1, 1)
-      love.graphics.setFont(love.graphics.newFont('assets/GreenFlame.ttf', 20))
+      love.graphics.setColor(0, 0, 0)
+      love.graphics.setFont(love.graphics.newFont('assets/GreenFlame.ttf', c.HEADER_SIZE))
       love.graphics.printf('Paused', 0, love.graphics.getHeight()*0.4, love.graphics.getWidth(), 'center')
-      love.graphics.setFont(love.graphics.newFont('assets/GreenFlame.ttf', 12))
+      love.graphics.setFont(love.graphics.newFont('assets/GreenFlame.ttf', c.BODY_SIZE))
    end
 end
 

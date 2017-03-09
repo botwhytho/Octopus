@@ -8,7 +8,6 @@ local function draw(enemy)
       xoffset = (enemy.movement.direction or 0) <= 0 and 0 or enemy.w
    end
    love.graphics.draw(enemy.anim.spritesheet, enemy.anim.quads[enemy.anim.currFrame], enemy.x + xoffset, enemy.y, 0, xscale, 1/2)
-   --love.graphics.draw(enemy.sprite, enemy.x, enemy.y, 0, xscale, 0.5)
 end
 
 local function update(enemy, dt)

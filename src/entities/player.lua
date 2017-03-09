@@ -4,8 +4,8 @@ local player = {}
 
 local function handleInput(player, peakAmp)
 	-- Set jump height to peakAmp even if already jumping
-	if (peakAmp or 0) > 30 then
-		player.yVel = peakAmp*-5
+	if (peakAmp or 0) > c.MIC_THRESHOLD then
+		player.yVel = peakAmp*c.MIC_AMP_MULTIPLIER
 		player.isJumping = true
 	end
 
@@ -37,13 +37,13 @@ local function handleCollision(player)
 end
 
 local function jump(player, dt)
-	local gravity = 900
+	local gravity = c.GRAVITY
 
 	player.y = player.y + player.yVel * dt
 	player.yVel = player.yVel + gravity * dt
 
-	if player.y >= love.graphics.getHeight()/1.2 - player.h then -- y-position of the ground
-		player.y = love.graphics.getHeight()/1.2 - player.h
+	if player.y >= c.PLAYER_Y - c.PLAYER_H then -- y-position of the ground
+		player.y = c.PLAYER_Y - c.PLAYER_H
 		player.isJumping = false
 	end
 end
@@ -66,14 +66,14 @@ end
 function player.create(filepath, x, y)
 	local player = {}
 	player.anim = anim.create(filepath, 4, 0.2, 100, 84)
-	player.w = 100/2
-	player.h = 84/2
+	player.w = c.PLAYER_W
+	player.h = c.PLAYER_H
 	player.x = x
 	player.y = y - player.h
 
 	player.direction = 0
-	player.speed = 300
-	player.health = 5
+	player.speed = c.PLAYER_SPEED
+	player.health = c.PLAYER_HEALTH
 	player.score = 0
 
 	player.isJumping = false
