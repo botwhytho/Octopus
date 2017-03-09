@@ -6,6 +6,7 @@ local scene = require('src.scene')
 local hud = require('src.hud')
 local swim = require('src.movement.swim')
 local object = require('src.entities.object')
+--local menu = require('src.menu')
 
 
 local function collision(player, others, xTol, yTol)
@@ -22,7 +23,10 @@ local function collision(player, others, xTol, yTol)
    return false
 end
 
-function game.init(state, microphone)
+function game.init(state, microphone, changeState)
+   local font = love.graphics.newFont('assets/GreenFlame.ttf', 12)
+   love.graphics.setFont(font)
+   
    state.oldTime = love.timer.getTime()
    state.microphone = microphone
 
@@ -40,7 +44,7 @@ function game.init(state, microphone)
    state.goal = enemy.create('assets/octo.png', state.level.goalX, state.level.groundY)
 end
 
-function game.update(state, dt, micAmp)
+function game.update(state, dt)
    if love.keyboard.isDown('escape') then
       love.event.quit()
    end
