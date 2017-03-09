@@ -26,10 +26,11 @@ end
 function game.init(state, microphone, changeState)
    local font = love.graphics.newFont('assets/GreenFlame.ttf', 12)
    love.graphics.setFont(font)
-   
+
    state.oldTime = love.timer.getTime()
    state.microphone = microphone
 
+   state.pause = false
    state.level = scene
    state.levelDuration = 45
    state.player = entity.create('assets/shitsprites.png', 200, state.level.groundY)
@@ -45,12 +46,17 @@ function game.init(state, microphone, changeState)
 end
 
 function game.update(state, dt)
-   if love.keyboard.isDown('escape') then
-      love.event.quit()
+   function love.keypressed(key)
+      if key == "space" then
+         state.pause = not state.pause
+      elseif key == "escape" then
+         love.event.quit()
+      end
    end
 
+
    -- 'Pause' game if time runs out
-   if state.levelDuration > 0 then
+   if not state.pause and state.levelDuration > 0 then
 
       --Level Duration logic
       local new = love.timer.getTime()
@@ -112,7 +118,7 @@ function game.draw(state)
    state.computer:draw()
    state.goal:draw()
 
-   state.hud:draw(state.player, state.levelDuration)
+   state.hud:draw(state.player, state.levelDuration, state.pause)
 end
 
 return game
