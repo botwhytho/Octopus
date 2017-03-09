@@ -1,6 +1,6 @@
 local swim = {}
 
-function swim.update(enemy, dt)
+local function update(enemy, dt)
    -- Horizontal movement
    enemy.x = enemy.x + (swim.direction * (swim.speed * dt))
    if enemy.x + enemy.w < -10 then swim.direction = 1
@@ -17,13 +17,17 @@ function swim.update(enemy, dt)
    end
 end
 
-swim.speed = 300
-swim.direction = -1
+function swim.create()
+   swim = {}
+   swim.speed = 300
+   swim.direction = -1
 
-swim.yDirection = 1
-swim.ySpeed = 200
-swim.maxJiggle = 80
-swim.currJiggle = 0
-
+   swim.yDirection = 1
+   swim.ySpeed = 200
+   swim.maxJiggle = 80
+   swim.currJiggle = 0
+   swim.update = update
+   return swim
+end
 
 return swim

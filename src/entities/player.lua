@@ -10,8 +10,8 @@ local function handleInput(player, peakAmp)
 	end
 
 	-- Handle keyboard movement & Prevent player from moving outside of the screen
-	if love.keyboard.isDown('d') or love.keyboard.isDown('right') and player.x + player.w < love.graphics.getWidth() then player.direction = 1
-	elseif love.keyboard.isDown('a') or love.keyboard.isDown('left') and player.x > 0 then player.direction = -1
+	if love.keyboard.isDown('d') or love.keyboard.isDown('right') then player.direction = 1
+	elseif love.keyboard.isDown('a') or love.keyboard.isDown('left') then player.direction = -1
 	else player.direction = 0
 	end
 end
@@ -20,7 +20,8 @@ local function update(player, dt, peakamp)
 	player.anim:update(dt)
 	player:handleInput(peakamp)
 
-	player.x = player.x + player.direction * (player.speed * dt)
+	local newPos = player.x + player.direction * (player.speed * dt)
+	player.x = (newPos > 0 and newPos+player.w < love.graphics.getWidth()) and newPos or player.x
 	if player.isJumping then player:jump(dt) end
 end
 

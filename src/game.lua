@@ -23,7 +23,7 @@ local function collision(player, others, xTol, yTol)
 end
 
 function game.init(state, microphone)
-   state.countdown = love.timer.getTime()
+   state.oldTime = love.timer.getTime()
    state.microphone = microphone
 
    state.level = scene
@@ -32,8 +32,8 @@ function game.init(state, microphone)
    state.hud = hud.create(state.player.health, 100, 100)
 
    state.enemies = {}
-   table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), 200, swim))
-   table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth()*1.25, 300, swim))
+   table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), 200, swim.create()))
+   table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth()*1.25, 300, swim.create()))
    table.insert(state.enemies, enemy.create('assets/turtle.png', 400, state.level.groundY))
 
    state.computer = object.create(30, state.player.y-50, 50, 50)
@@ -48,54 +48,52 @@ function game.update(state, dt, micAmp)
    -- 'Pause' game if time runs out
    if state.levelDuration > 0 then
 
-   --Level Duration logic
-   if state.levelDuration > 0 then
-     local now = love.timer.getTime()
-     if now - state.countdown > 1 then
-       state.countdown = now
-       state.levelDuration = state.levelDuration - 1
-     end
-   end
+      --Level Duration logic
+      local new = love.timer.getTime()
+      if new - state.oldTime > 1 then
+         state.oldTime = new
+         state.levelDuration = state.levelDuration - 1
+      end
 
-	 state.player:update(dt, state.microphone:poll())
 
-   for i, v in pairs(state.enemies) do
-      v:update(dt)
-   end
+      state.player:update(dt, state.microphone:poll())
 
-   -- Handle collision
-   if collision(state.player, state.enemies) then
-      if state.player.hasObject then state.computer:reset(30, state.level.groundY-state.player.h-50) end
-      state.player:handleCollision()
-      state.hud:update(state.player.health)
-   else
-      state.player.collided = false
-   end
+      for i, v in pairs(state.enemies) do
+         v:update(dt)
+      end
 
-   if collision(state.computer, state.enemies) then
-      state.player.hasObject = false
-      state.computer:reset(30, state.level.groundY-state.player.h-50)
-   end
+      -- Handle collision
+      if collision(state.player, state.enemies) then
+         if state.player.hasObject then state.computer:reset(30, state.level.groundY-state.player.h-50) end
+         state.player:handleCollision()
+      else
+         state.player.collided = false
+      end
 
-   -- Needs to be updated after collision logic and before pick-up logic for accurate 'dropped' values
-   state.computer:update(state.player)
-
-   -- Pick up object if player is 'near enough'
-   if collision(state.player, {state.computer}, -10, 10)
-      and not state.player.hasObject and not state.computer.dropped then
-      state.player.hasObject = true
-   end
-
-   -- Drop off object
-   if collision(state.player, {state.goal}, -(state.goal.w/2), -(state.goal.w/2)) then
-      if state.player.hasObject then
-         state.player.score = state.player.score + 1
+      if collision(state.computer, state.enemies) then
          state.player.hasObject = false
          state.computer:reset(30, state.level.groundY-state.player.h-50)
       end
-   end
 
- end
+      -- Needs to be updated after collision logic and before pick-up logic for accurate 'dropped' values
+      state.computer:update(state.player)
+
+      -- Pick up object if player is 'near enough'
+      if collision(state.player, {state.computer}, -10, 10)
+      and not state.player.hasObject and not state.computer.dropped then
+         state.player.hasObject = true
+      end
+
+      -- Drop off object
+      if collision(state.player, {state.goal}, -(state.goal.w/2), -(state.goal.w/2)) then
+         if state.player.hasObject then
+            state.player.score = state.player.score + 1
+            state.player.hasObject = false
+            state.computer:reset(30, state.level.groundY-state.player.h-50)
+         end
+      end
+
+   end
 
 end
 
@@ -110,7 +108,7 @@ function game.draw(state)
    state.computer:draw()
    state.goal:draw()
 
-   state.hud:draw(state.player,state)
+   state.hud:draw(state.player, state.levelDuration)
 end
 
 return game
