@@ -27,12 +27,13 @@ function game.init(state, microphone)
    state.microphone = microphone
 
    state.level = scene
-   state.levelDuration = 15
+   state.levelDuration = 45
    state.player = entity.create('assets/shitsprites.png', 200, state.level.groundY)
    state.hud = hud.create(state.player.health, 100, 100)
 
    state.enemies = {}
    table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), 200, swim))
+   table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth()*1.25, 300, swim))
    table.insert(state.enemies, enemy.create('assets/turtle.png', 400, state.level.groundY))
 
    state.computer = object.create(30, state.player.y-50, 50, 50)
@@ -43,6 +44,9 @@ function game.update(state, dt, micAmp)
    if love.keyboard.isDown('escape') then
       love.event.quit()
    end
+
+   -- 'Pause' game if time runs out
+   if state.levelDuration > 0 then
 
    --Level Duration logic
    if state.levelDuration > 0 then
@@ -90,15 +94,18 @@ function game.update(state, dt, micAmp)
          state.computer:reset(30, state.level.groundY-state.player.h-50)
       end
    end
+
+ end
+
 end
 
 function game.draw(state)
    state.level:draw()
 
-   state.player:draw()
    for i, v in pairs(state.enemies) do
       v:draw()
    end
+   state.player:draw()
 
    state.computer:draw()
    state.goal:draw()
