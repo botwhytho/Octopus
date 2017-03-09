@@ -27,9 +27,9 @@ local function reset(object)
    object.held = false
 end
 
-function object.create(filepath, x, y, w, h)
+function object.create(filepath, x, y)
    local inst = {}
-   
+
    inst.sprite = love.graphics.newImage(filepath)
    inst.w = inst.sprite:getWidth()*0.45
    inst.h = inst.sprite:getHeight()*0.45

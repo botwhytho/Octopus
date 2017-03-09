@@ -31,7 +31,7 @@ local function draw(hb, player, levelDuration, paused)
       love.graphics.setColor(1, 1, 1)
       love.graphics.setFont(love.graphics.newFont('assets/GreenFlame.ttf', 20))
       love.graphics.printf('Paused', 0, love.graphics.getHeight()*0.4, love.graphics.getWidth(), 'center')
-      love.graphics.setFont(love.graphics.newFont('assets/Greenflame.ttf', 12))
+      love.graphics.setFont(love.graphics.newFont('assets/GreenFlame.ttf', 12))
    end
 end
 

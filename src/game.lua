@@ -39,11 +39,11 @@ function game.init(state, microphone, changeState)
 
    state.enemies = {}
    table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), 200, swim.create()))
-   table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth()*1.25, 300, swim.create()))
+   table.insert(state.enemies, enemy.create('assets/fish2.png', -50, 300, swim.create()))
    table.insert(state.enemies, enemy.create('assets/turtle.png', 400, state.level.groundY))
 
    state.computer = object.create('assets/recurseLogo.png', 30, state.player.y, 50, 62.5)
-   state.goal = enemy.create('assets/octo.png', state.level.goalX, state.level.groundY, exit.create(state.level.goalX))
+   state.goal = enemy.create('assets/crab.png', state.level.goalX, state.level.groundY, exit.create(state.level.goalX))
    state.goal.hasObject = false
 end
 
