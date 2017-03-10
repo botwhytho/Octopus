@@ -1,6 +1,6 @@
 local hud = {}
 
-local function draw(hud, player, levelDuration, paused, lvl)
+local function draw(hud, player, levelDuration, paused, lvl, highScore)
    love.graphics.setFont(hud.small)
    -- Print instantaneous FPS
    love.graphics.printf({{0,0,0},player.hasObject and "Move those Computers!" or "Go grab another server" }, 0, 0, love.graphics.getWidth(), "center")
@@ -8,9 +8,12 @@ local function draw(hud, player, levelDuration, paused, lvl)
    love.graphics.printf({{0,0,0},"Score: " .. player.score}, c.SCORE_Y, c.HEALTH_Y, love.graphics.getWidth(), "center")
    -- Print current level
    love.graphics.printf({{0,0,0},"Level: " .. lvl}, c.LEVEL_X, c.HEALTH_Y, love.graphics.getWidth(), "center")
+   -- Print highScore
+   love.graphics.printf({{0,0,0},"High Score: " .. highScore}, c.LEVEL_X, c.HEALTH_Y, love.graphics.getWidth(), "right")
    -- Print countdown timer
    love.graphics.setFont(hud.countdown)
    love.graphics.printf({{0,0,0}, levelDuration}, 0, c.TIMER_Y, love.graphics.getWidth(), "center")
+
 
    -- Print player's lives
    local x, y = hud.x, hud.y

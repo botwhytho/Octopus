@@ -33,6 +33,7 @@ function game.init(state, microphone, changeState)
 
    state.levelData = levelData.create()
 
+   state.highScore = 0
    state.pause = false
    state.level = scene
    state.level.n = 1
@@ -66,6 +67,12 @@ function game.reset(state)
    state.levelDuration = state.levelData[state.level.n].duration
    state.enemies = nil
    state.enemies = state.levelData[state.level.n].enemies
+end
+
+function game.updateHighScore(state, playerScore)
+   if playerScore > state.highScore then
+      state.highScore = playerScore
+   end
 end
 
 function game.update(state, dt)
@@ -144,6 +151,7 @@ function game.update(state, dt)
       if collision(state.player, {state.goal}, -(state.goal.w/2), -(state.goal.w/2)) then
          if state.player.hasObject then
             state.player.score = state.player.score + 1
+            state:updateHighScore(state.player.score)
             state.player.hasObject = false
             state.goal.hasObject = true
          end
@@ -183,7 +191,7 @@ function game.draw(state)
 
    state.clock:draw()
 
-   state.hud:draw(state.player, state.levelDuration, state.pause, state.level.n)
+   state.hud:draw(state.player, state.levelDuration, state.pause, state.level.n, state.highScore)
 end
 
 return game
