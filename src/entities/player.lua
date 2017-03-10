@@ -39,10 +39,11 @@ end
 local function jump(player, dt)
 	local gravity = c.GRAVITY
 
-	player.y = player.y + player.yVel * dt
+	local newY = player.y + player.yVel * dt
+	player.y = newY < 0 and player.y or newY
 	player.yVel = player.yVel + gravity * dt
 
-	if player.y >= c.PLAYER_Y - c.PLAYER_H then -- y-position of the ground
+	if player.y >= c.PLAYER_Y - c.PLAYER_H then -- player landed
 		player.y = c.PLAYER_Y - c.PLAYER_H
 		player.isJumping = false
 	end
