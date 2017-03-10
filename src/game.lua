@@ -24,6 +24,7 @@ local function collision(player, others, xTol, yTol)
 end
 
 function game.init(state, microphone, changeState)
+   love.graphics.setBackgroundColor(255, 255, 255)
    local font = love.graphics.newFont('assets/GreenFlame.ttf', c.BODY_SIZE)
    love.graphics.setFont(font)
 
