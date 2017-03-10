@@ -41,11 +41,11 @@ function game.init(state, microphone, changeState)
    table.insert(state.enemies, enemy.create('assets/fish2.png', -50, 300, xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED)))
    table.insert(state.enemies, enemy.create('assets/turtle.png', 400, state.level.groundY))
    table.insert(state.enemies, enemy.create('assets/hook.png', 200, 150, xyMove.create(0, c.HOOK_YSPEED)))
-   table.insert(state.enemies, enemy.create('assets/hook.png', 620, 250, xyMove.create(0, c.HOOK_YSPEED, -1)))
+   table.insert(state.enemies, enemy.create('assets/hook.png', 620, 250, xyMove.create(0, c.HOOK_YSPEED, nil, -1)))
 
+   state.clock = object.create('assets/clock.png', love.graphics.getWidth(), 0) -- spawn off-screen
    state.computer = object.create('assets/recurseLogo.png', c.OBJECT_X, c.PLAYER_Y - state.player.h)
    state.goal = enemy.create('assets/crab.png', state.level.goalX, state.level.groundY, exit.create(state.level.goalX))
-   state.goal.hasObject = false
 end
 
 function game.update(state, dt)
@@ -87,7 +87,17 @@ function game.update(state, dt)
          state.computer:reset()
       end
 
-      -- Pick up object if player is 'near enough'
+      -- Object logic: Clock
+      if state.clock.x == love.graphics.getWidth() and math.random(c.CLOCK_SPAWN_P) == 2 then
+         state.clock:reset(math.random(love.graphics.getWidth() - state.clock.w),
+                           math.random(love.graphics.getHeight() - (love.graphics.getHeight() - c.GROUND_Y) - state.clock.h))
+      end
+      if collision(state.player, {state.clock}, -5, -5) then
+         state.levelDuration = state.levelDuration + 5
+         state.clock:reset(love.graphics.getWidth(), 0)
+      end
+
+      -- Object logic: Computer, pick up if player is 'near enough'
       if collision(state.player, {state.computer}, -10, 10)
       and not state.player.hasObject and not state.goal.hasObject then
          state.player.hasObject = true
@@ -121,6 +131,7 @@ function game.draw(state)
    state.player:draw()
    state.computer:draw()
    state.goal:draw()
+   state.clock:draw()
 
    state.hud:draw(state.player, state.levelDuration, state.pause)
 end

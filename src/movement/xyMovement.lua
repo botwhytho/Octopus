@@ -3,8 +3,8 @@ local swim = {}
 local function update(enemy, dt)
    -- Horizontal movement
    enemy.x = enemy.x + (enemy.movement.direction * (enemy.movement.speed * dt))
-   if enemy.x + enemy.w < -10 then enemy.movement.direction = 1
-   elseif enemy.x > (love.graphics.getWidth()+30) then enemy.movement.direction = -1
+   if enemy.x + enemy.w < -enemy.w then enemy.movement.direction = 1
+   elseif enemy.x > (love.graphics.getWidth()+enemy.w) then enemy.movement.direction = -1
    end
 
    -- Vertical movement

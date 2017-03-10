@@ -21,9 +21,9 @@ local function draw(object)
    love.graphics.draw(object.sprite, object.x, object.y, 0, 0.45, 0.45)
 end
 
-local function reset(object)
-   object.x = object.originX
-   object.y = object.originY
+local function reset(object, x, y)
+   object.x = x or object.originX
+   object.y = y or object.originY
    object.held = false
 end
 

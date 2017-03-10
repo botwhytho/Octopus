@@ -18,11 +18,13 @@
    c.PLAYER_SPEED = 500
    c.PLAYER_HEALTH = 5
    c.OBJECT_X = 30
+   c.CLOCK_SPAWN_P = 1000
 
    -- Enemy Data
    c.FISH_XSPEED = 300
    c.FISH_YSPEED = 90
    c.HOOK_YSPEED = 30
+   c.TURTLE_XSPEED = 10
 
    -- Fonts
    c.BODY_SIZE = 12
