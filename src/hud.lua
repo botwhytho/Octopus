@@ -1,7 +1,7 @@
 local hud = {}
 
 local function draw(hud, player, levelDuration, paused, lvl)
-   love.graphics.setFont(hud.default)
+   love.graphics.setFont(hud.small)
    -- Print instantaneous FPS
    love.graphics.print({{0,0,0},love.timer.getFPS()}, 5, love.graphics.getHeight()-15)
    -- Print state of dropped object
@@ -11,6 +11,7 @@ local function draw(hud, player, levelDuration, paused, lvl)
    -- Print current level
    love.graphics.printf({{0,0,0},"Level: " .. lvl}, c.LEVEL_X, c.HEALTH_Y, love.graphics.getWidth(), "center")
    -- Print countdown timer
+   love.graphics.setFont(hud.countdown)
    love.graphics.printf({{0,0,0}, levelDuration}, 0, c.TIMER_Y, love.graphics.getWidth(), "center")
 
    -- Print player's lives
@@ -40,7 +41,7 @@ local function draw(hud, player, levelDuration, paused, lvl)
       love.graphics.setFont(hud.header)
       love.graphics.printf('Well Done!', 0, love.graphics.getHeight()*0.4, love.graphics.getWidth(), 'center')
       love.graphics.setFont(hud.subHeader)
-      love.graphics.printf('Press Enter to Proceed', 0, love.graphics.getHeight()*0.5, love.graphics.getWidth(), 'center')
+      love.graphics.printf('Press Enter to Proceed', 0, love.graphics.getHeight()*0.53, love.graphics.getWidth(), 'center')
 
    elseif levelDuration == 0 and player.dead then
       love.graphics.setColor(unpack(c.RED))
@@ -50,7 +51,8 @@ local function draw(hud, player, levelDuration, paused, lvl)
       love.graphics.setFont(hud.header)
       love.graphics.printf('Game Over', 0, love.graphics.getHeight()*0.4, love.graphics.getWidth(), 'center')
       love.graphics.setFont(hud.subHeader)
-      love.graphics.printf('Your score was too low', 0, love.graphics.getHeight()*0.5, love.graphics.getWidth(), 'center')
+      love.graphics.printf('Your score was too low', 0, love.graphics.getHeight()*0.51, love.graphics.getWidth(), 'center')
+      love.graphics.printf('press space to restart', 0, love.graphics.getHeight()*0.54, love.graphics.getWidth(), 'center')
 
    elseif player.dead then
       love.graphics.setColor(unpack(c.RED))
@@ -60,7 +62,8 @@ local function draw(hud, player, levelDuration, paused, lvl)
       love.graphics.setFont(hud.header)
       love.graphics.printf('Game Over', 0, love.graphics.getHeight()*0.4, love.graphics.getWidth(), 'center')
       love.graphics.setFont(hud.subHeader)
-      love.graphics.printf('Final Score:'..player.score, 0, love.graphics.getHeight()*0.5, love.graphics.getWidth(), 'center')
+      love.graphics.printf('Final Score: '..player.score, 0, love.graphics.getHeight()*0.51, love.graphics.getWidth(), 'center')
+      love.graphics.printf('press space to restart', 0, love.graphics.getHeight()*0.54, love.graphics.getWidth(), 'center')
    end
 end
 
@@ -71,9 +74,11 @@ function hud.create(health, x, y)
    inst.lives = health
    inst.livesSprite = love.graphics.newImage('assets/octo.png')
 
-   inst.header = love.graphics.newFont('assets/font.otf', 60)
+   inst.header = love.graphics.newFont('assets/font.otf', 70)
    inst.subHeader = love.graphics.newFont('assets/Roboto-Regular.ttf', 20)
+   inst.small = love.graphics.newFont('assets/Roboto-Regular.ttf', c.BODY_SIZE)
    inst.default = love.graphics.newFont('assets/GreenFlame.ttf', c.BODY_SIZE)
+   inst.countdown = love.graphics.newFont('assets/font2.ttf', 70)
 
    inst.draw = draw
    inst.update = update

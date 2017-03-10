@@ -17,14 +17,14 @@ local function update(enemy, dt)
    end
 end
 
-function swim.create(xSpeed, ySpeed, yDirection)
+function swim.create(xSpeed, ySpeed, maxJiggle, yDirection)
    swim = {}
    swim.speed = xSpeed
    swim.direction = -1
 
    swim.yDirection = yDirection or 1
    swim.ySpeed = ySpeed
-   swim.maxJiggle = 40
+   swim.maxJiggle = maxJiggle or 40
    swim.currJiggle = 0
    swim.update = update
    return swim

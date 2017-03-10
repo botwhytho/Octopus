@@ -45,9 +45,31 @@ function game.init(state, microphone, changeState)
    state.goal = enemy.create('assets/crab.png', state.level.goalX, state.level.groundY, exit.create(state.level.goalX))
 end
 
+function game.reset(state)
+   state.player.score = 0
+   state.player.dead = false
+   state.player.hasObject = false
+   state.player.x = c.PLAYER_X
+   state.player.y = c.PLAYER_Y - state.player.h
+   state.player.health = c.PLAYER_HEALTH
+   state.player.anim.blinking = false
+
+   state.computer:reset()
+
+   state.clock:reset(love.graphics.getWidth(), 0)
+   state.clock.timer = 0
+
+   state.level.n = 1
+   state.levelDuration = levelData[state.level.n].duration
+   state.enemies = nil
+   state.enemies = levelData[state.level.n].enemies
+end
+
 function game.update(state, dt)
    function love.keypressed(key)
-      if (key == "space") and state.levelDuration > 0 then
+      if (key == "space") and state.player.dead then
+         state:reset()
+      elseif (key == "space") and state.levelDuration > 0 then
          state.pause = not state.pause
       elseif key == "escape" then
          love.event.quit()
@@ -147,6 +169,7 @@ end
 
 function game.draw(state)
    state.level:draw()
+   state.goal:draw()
 
    for i, v in pairs(state.enemies) do
       v:draw()
@@ -154,7 +177,7 @@ function game.draw(state)
 
    state.player:draw()
    state.computer:draw()
-   state.goal:draw()
+
    state.clock:draw()
 
    state.hud:draw(state.player, state.levelDuration, state.pause, state.level.n)

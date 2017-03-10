@@ -10,7 +10,7 @@ function menu.init(menu, device, changeState)
    menu.micVol = 0
 
    menu.header = love.graphics.newFont('assets/font.otf', 90)
-   menu.subHeader = love.graphics.newFont('assets/Roboto-Regular.ttf', 50)
+   menu.subHeader = love.graphics.newFont('assets/font.otf', 45)
 end
 
 function menu.update(state)
@@ -21,9 +21,9 @@ function menu.update(state)
          love.event.quit()
       end
 
-      if (key == 'down') or (key == 's') and menu.one_player_selected then
+      if (key == 'right') or (key == 'd') and menu.one_player_selected then
          menu.one_player_selected = false
-      elseif (key == 'up') or (key == 'w') and menu.one_player_selected == false then
+      elseif (key == 'left') or (key == 'a') and menu.one_player_selected == false then
          menu.one_player_selected = true
       end
 
@@ -43,13 +43,14 @@ function menu.draw(state)
    love.graphics.setColor(255, 255,255, amplitude_to_alpha)
    love.graphics.printf('Octo-Octo', 0, 30, love.graphics.getWidth(), 'center')
 
-   local mode_selected = menu.one_player_selected and {219, 78, 78} or {255, 255, 255}
-   love.graphics.setColor(mode_selected)
-   love.graphics.printf('1 Player', 0, love.graphics.getHeight()*0.55, love.graphics.getWidth(), 'center')
-
+   love.graphics.setFont(menu.subHeader)
    local mode_selected = not menu.one_player_selected and {219, 78, 78} or {255, 255, 255}
    love.graphics.setColor(mode_selected)
-   love.graphics.printf('Two Team Battle!', 0, love.graphics.getHeight()*0.65, love.graphics.getWidth(), 'center')
+   love.graphics.printf('1P', -25, love.graphics.getHeight()*0.85, love.graphics.getWidth(), 'center')
+
+   local mode_selected = menu.one_player_selected and {219, 78, 78} or {255, 255, 255}
+   love.graphics.setColor(mode_selected)
+   love.graphics.printf('2P', 25, love.graphics.getHeight()*0.85, love.graphics.getWidth(), 'center')
    love.graphics.setColor(255, 255, 255)
 end
 

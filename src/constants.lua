@@ -26,11 +26,11 @@
    -- Enemy Data
    c.FISH_XSPEED = 300
    c.FISH_YSPEED = 90
-   c.HOOK_YSPEED = 30
+   c.HOOK_YSPEED = 20
    c.TURTLE_XSPEED = 10
 
    -- Fonts
-   c.BODY_SIZE = 12
+   c.BODY_SIZE = 17
    c.HEADER_SIZE = 20
 
    -- HUD Data
