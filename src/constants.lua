@@ -6,7 +6,7 @@
 
    -- Level data
    c.LVL_DURATION = 45
-   c.GRAVITY = 900
+   c.GRAVITY = 1200
    c.GROUND_Y = love.graphics.getHeight()/1.2
    c.GOAL_X = love.graphics.getWidth()*.85 + 25
 
@@ -16,7 +16,7 @@
    c.PLAYER_W = 100/2
    c.PLAYER_H = 84/2
    c.PLAYER_SPEED = 500
-   c.PLAYER_HEALTH = 5
+   c.PLAYER_HEALTH = 10
    c.OBJECT_X = 30
    c.CLOCK_SPAWN_P = 1000
 
@@ -29,5 +29,10 @@
    -- Fonts
    c.BODY_SIZE = 12
    c.HEADER_SIZE = 20
+
+   -- HUD Data
+   c.HEALTH_X = 20
+   c.HEALTH_Y = 0
+   c.SCORE_Y = love.graphics.getHeight()*.05
 
 return c

@@ -4,11 +4,11 @@ local function draw(hb, player, levelDuration, paused)
    -- Print instantaneous FPS
    love.graphics.print({{0,0,0},love.timer.getFPS()}, 0, 0)
    -- Print state of dropped object
-   love.graphics.print({{0,0,0},player.hasObject and "Move those Computers!" or "Go grab another server" }, love.graphics.getWidth()/2, 0)
+   love.graphics.printf({{0,0,0},player.hasObject and "Move those Computers!" or "Go grab another server" }, 0, 0, love.graphics.getWidth(), "center")
    -- Print current score
-   love.graphics.print({{0,0,0},"Score: " .. player.score}, love.graphics.getWidth()/2, love.graphics.getHeight()*.15)
+   love.graphics.printf({{0,0,0},"Score: " .. player.score}, 0, c.SCORE_Y, love.graphics.getWidth(), "center")
    -- Print countdown timer
-   love.graphics.print({{0,0,0},"Time Left: " .. levelDuration}, love.graphics.getWidth()/2, love.graphics.getHeight()*.20)
+   love.graphics.printf({{0,0,0},"Time Left: " .. levelDuration}, 0, 0, love.graphics.getWidth(), "right")
 
    -- Print player's lives
    local x, y = hb.x, hb.y

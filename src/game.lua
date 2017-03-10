@@ -34,7 +34,7 @@ function game.init(state, microphone, changeState)
    state.level = scene
    state.levelDuration = c.LVL_DURATION
    state.player = entity.create('assets/shitsprites.png', c.PLAYER_X, c.PLAYER_Y)
-   state.hud = hud.create(state.player.health, 100, 100)
+   state.hud = hud.create(state.player.health, c.HEALTH_X, c.HEALTH_Y)
 
    state.enemies = {}
    table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), 200, xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED)))
