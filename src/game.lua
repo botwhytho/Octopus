@@ -32,6 +32,7 @@ function game.init(state, microphone, changeState)
 
    state.pause = false
    state.level = scene
+   state.level.level = 1
    state.levelDuration = c.LVL_DURATION
    state.player = entity.create('assets/shitsprites.png', c.PLAYER_X, c.PLAYER_Y)
    state.hud = hud.create(state.player.health, c.HEALTH_X, c.HEALTH_Y)
@@ -118,7 +119,20 @@ function game.update(state, dt)
 
       -- Handle object drop-off
       state.goal:update(dt)
+   elseif state.levelDuration == 0 then
+     if love.keyboard.isDown('return') then
+       state.level.level = state.level.level + 1
+       state.player.x = c.PLAYER_X
+       state.player.y = c.PLAYER_Y - state.player.h
+       state.player.hasObject = false
+       state.computer:reset()
+       state.levelDuration = c.LVL_DURATION
+       --Both Two Fish and Two hooks are appearing at a time, not sure why. Some parameters need to be tweaked and/or randomized more
+       table.insert(state.enemies, enemy.create('assets/hook.png', love.math.random(5,love.graphics.getWidth()), 150, xyMove.create(0, c.HOOK_YSPEED)))
+       table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), love.math.random(love.graphics.getHeight()*0.25,love.graphics.getHeight()*0.75), xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED)))
+     end
    end
+
 end
 
 function game.draw(state)
@@ -133,7 +147,7 @@ function game.draw(state)
    state.goal:draw()
    state.clock:draw()
 
-   state.hud:draw(state.player, state.levelDuration, state.pause)
+   state.hud:draw(state.player, state.levelDuration, state.pause, state.level.level)
 end
 
 return game

@@ -5,7 +5,7 @@
    c.MIC_AMP_MULTIPLIER = -5
 
    -- Level data
-   c.LVL_DURATION = 45
+   c.LVL_DURATION = 5
    c.GRAVITY = 1200
    c.GROUND_Y = love.graphics.getHeight()/1.2
    c.GOAL_X = love.graphics.getWidth()*.85 + 25
