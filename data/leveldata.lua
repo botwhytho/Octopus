@@ -1,13 +1,13 @@
 local enemy = require('src.entities.enemy')
 local xyMove = require('src.movement.xyMovement')
-
+local c = require('src.constants')
 local levelData = {}
 
 function levelData.create()
    local t = {
    -- Level 1
    {minScore = 0,
-   duration = 2,
+   duration = c.LVL_DURATION,
    enemies = {
       enemy.create('assets/fish.png', love.graphics.getWidth(), 200, xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED)),
       enemy.create('assets/fish2.png', -50, 300, xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED)),
@@ -19,7 +19,7 @@ function levelData.create()
 
    -- Level 2
    {minScore = 7,
-   duration = 2,
+   duration = c.LVL_DURATION,
    enemies = {
       enemy.create('assets/fish.png', love.graphics.getWidth(), 70, xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED))
    }
@@ -27,7 +27,7 @@ function levelData.create()
 
    -- Level 3
    {minScore = 10,
-   duration = 40,
+   duration = c.LVL_DURATION,
    enemies = {
       enemy.create('assets/turtle.png', love.graphics.getWidth(), c.GROUND_Y, xyMove.create(10, 0))
    }
@@ -35,7 +35,7 @@ function levelData.create()
 
    -- Level 4
    {minScore = 500, -- make it impossible to go any further :)
-   duration = 40,
+   duration = c.LVL_DURATION,
    enemies = {
       enemy.create('assets/hook.png', 300, 300, xyMove.create(0, c.HOOK_YSPEED, -1)),
    }
