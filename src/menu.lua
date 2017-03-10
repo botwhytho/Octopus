@@ -9,8 +9,8 @@ function menu.init(menu, device, changeState)
    menu.octo = love.graphics.newImage('assets/octopus_intro.png')
    menu.micVol = 0
 
-   local font = love.graphics.newFont('assets/LadyRadical.ttf', 70)
-   love.graphics.setFont(font)
+   menu.header = love.graphics.newFont('assets/font.otf', 90)
+   menu.subHeader = love.graphics.newFont('assets/Roboto-Regular.ttf', 50)
 end
 
 function menu.update(state)
@@ -38,6 +38,7 @@ function menu.draw(state)
 
    love.graphics.draw(menu.octo, love.graphics.getWidth()/2-menu.octo:getWidth()/4, love.graphics.getHeight()/2-menu.octo:getHeight()/4+25, 0, 0.5, 0.5)
 
+   love.graphics.setFont(menu.header)
    local amplitude_to_alpha = math.floor(menu.micVol/100*255-0.5)+75 --Turning amplitude to alpha
    love.graphics.setColor(255, 255,255, amplitude_to_alpha)
    love.graphics.printf('Octo-Octo', 0, 30, love.graphics.getWidth(), 'center')

@@ -4,7 +4,7 @@ local xyMove = require('src.movement.xyMovement')
 local levelData = {
    -- Level 1
    {minScore = 0,
-   duration = 45,
+   duration = 2,
    enemies = {
       enemy.create('assets/fish.png', love.graphics.getWidth(), 200, xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED)),
       enemy.create('assets/fish2.png', -50, 300, xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED)),
@@ -18,7 +18,7 @@ local levelData = {
    {minScore = 0,
    duration = 2,
    enemies = {
-      enemy.create('assets/fish.png', love.graphics.getWidth(), love.math.random(love.graphics.getHeight()*0.25,love.graphics.getHeight()*0.75), xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED))
+      enemy.create('assets/fish.png', love.graphics.getWidth(), 70, xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED))
    }
    },
 

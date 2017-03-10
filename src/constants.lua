@@ -5,6 +5,8 @@
    c.MIC_AMP_MULTIPLIER = -5
 
    -- Level data
+   c.BACKGROUND_COLOUR = {184, 229, 240 }
+   c.GROUND_COLOUR = {250, 236, 199}
    c.LVL_DURATION = 2
    c.GRAVITY = 1200
    c.GROUND_Y = love.graphics.getHeight()/1.2
