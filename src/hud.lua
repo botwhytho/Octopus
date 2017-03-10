@@ -1,6 +1,7 @@
 local hud = {}
 
 local function draw(hud, player, levelDuration, paused, lvl)
+   love.graphics.setFont(hud.default)
    -- Print instantaneous FPS
    love.graphics.print({{0,0,0},love.timer.getFPS()}, 5, love.graphics.getHeight()-15)
    -- Print state of dropped object
@@ -20,32 +21,46 @@ local function draw(hud, player, levelDuration, paused, lvl)
    end
 
    if paused then
-      -- Dark overlay
-      love.graphics.setColor(0, 0, 0, 170)
+      -- Screen Overlay
+      love.graphics.setColor(unpack(c.YELLOW))
       love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 
       -- Paused text
-      love.graphics.setColor(0, 0, 0)
-      love.graphics.setFont(love.graphics.newFont('assets/GreenFlame.ttf', c.HEADER_SIZE))
-      love.graphics.printf('Paused', 0, love.graphics.getHeight()*0.4, love.graphics.getWidth(), 'center')
-      love.graphics.setFont(love.graphics.newFont('assets/GreenFlame.ttf', c.BODY_SIZE))
+      love.graphics.setColor(255, 255, 255)
+      love.graphics.setFont(hud.header)
+      love.graphics.printf({{0, 0, 0},'Paused'}, 0, love.graphics.getHeight()*0.4, love.graphics.getWidth(), 'center')
 
    elseif levelDuration == 0 and (not player.dead) then
-     -- Dark overlay
-     love.graphics.setColor(0, 0, 0, 170)
-     love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+      -- Screen Overlay
+      love.graphics.setColor(unpack(c.BLUE))
+      love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 
-     -- Paused text
-     love.graphics.setColor(0, 0, 0)
-     love.graphics.setFont(love.graphics.newFont('assets/GreenFlame.ttf', c.HEADER_SIZE))
-     love.graphics.printf('Your current score is:' .. player.score, 0, love.graphics.getHeight()*0.4, love.graphics.getWidth(), 'center')
-     love.graphics.printf('Press Enter to continue', 0, love.graphics.getHeight()*0.45, love.graphics.getWidth(), 'center')
-     love.graphics.setFont(love.graphics.newFont('assets/GreenFlame.ttf', c.BODY_SIZE))
+      -- Paused text
+      love.graphics.setColor(255, 255, 255)
+      love.graphics.setFont(hud.header)
+      love.graphics.printf('Well Done!', 0, love.graphics.getHeight()*0.4, love.graphics.getWidth(), 'center')
+      love.graphics.setFont(hud.subHeader)
+      love.graphics.printf('Press Enter to Proceed', 0, love.graphics.getHeight()*0.5, love.graphics.getWidth(), 'center')
 
    elseif levelDuration == 0 and player.dead then
-     love.graphics.print({{0,0,0},'Time\'s up, you dead'}, love.graphics.getWidth()/2, love.graphics.getHeight()/3)
+      love.graphics.setColor(unpack(c.RED))
+      love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+
+      love.graphics.setColor(255, 255, 255)
+      love.graphics.setFont(hud.header)
+      love.graphics.printf('Game Over', 0, love.graphics.getHeight()*0.4, love.graphics.getWidth(), 'center')
+      love.graphics.setFont(hud.subHeader)
+      love.graphics.printf('Your score was too low', 0, love.graphics.getHeight()*0.5, love.graphics.getWidth(), 'center')
+
    elseif player.dead then
-     love.graphics.print({{0,0,0},'Dead'}, love.graphics.getWidth()/2, love.graphics.getHeight()/3)
+      love.graphics.setColor(unpack(c.RED))
+      love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+
+      love.graphics.setColor(255, 255, 255)
+      love.graphics.setFont(hud.header)
+      love.graphics.printf('Game Over', 0, love.graphics.getHeight()*0.4, love.graphics.getWidth(), 'center')
+      love.graphics.setFont(hud.subHeader)
+      love.graphics.printf('Final Score:'..player.score, 0, love.graphics.getHeight()*0.5, love.graphics.getWidth(), 'center')
    end
 end
 
@@ -55,6 +70,10 @@ function hud.create(health, x, y)
    inst.y = y
    inst.lives = health
    inst.livesSprite = love.graphics.newImage('assets/octo.png')
+
+   inst.header = love.graphics.newFont('assets/font.otf', 60)
+   inst.subHeader = love.graphics.newFont('assets/Roboto-Regular.ttf', 20)
+   inst.default = love.graphics.newFont('assets/GreenFlame.ttf', c.BODY_SIZE)
 
    inst.draw = draw
    inst.update = update

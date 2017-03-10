@@ -37,5 +37,8 @@
    c.SCORE_Y = 40
    c.LEVEL_X = -40
    c.TIMER_Y = 50
+   c.YELLOW = {255, 199, 49, 170}
+   c.BLUE = {88, 184, 207, 170}
+   c.RED = {224, 26, 79, 170}
 
 return c

@@ -55,7 +55,7 @@ function game.update(state, dt)
    end
 
    -- 'Pause' game if time runs out
-   if not state.pause and state.levelDuration >= 1 then
+   if not state.pause and state.levelDuration >= 1 and not state.player.dead then
 
       --Level Duration logic
       local new = love.timer.getTime()
