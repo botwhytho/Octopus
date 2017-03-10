@@ -15,7 +15,6 @@ function love.load()
 
 	-- Open the default microphone device with default quality and 10ms of latency.
 	device = microphone.openDevice(nil, nil, c.MIC_LATENCY)
-	print(MIC_LATENCY)
 	device:start()
 
 	gameState:init(device, changeState)

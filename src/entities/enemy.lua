@@ -1,6 +1,12 @@
 local enemy = {}
 
 local function draw(enemy)
+   if enemy.movement and (enemy.movement.speed == 0 and enemy.movement.ySpeed == c.HOOK_YSPEED) then
+      love.graphics.setColor(0, 0, 0)
+      love.graphics.line(enemy.x+(enemy.w*0.85), enemy.y, enemy.x+(enemy.w*0.85), 0)
+      love.graphics.setColor(255, 255, 255)
+   end
+
    -- negative scale mirrors the sprite
    local xscale, xoffset = 0.5, 0
    if enemy.movement then
