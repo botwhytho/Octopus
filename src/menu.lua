@@ -11,6 +11,9 @@ function menu.init(menu, device, changeState)
 
    menu.header = love.graphics.newFont('assets/font.otf', 90)
    menu.subHeader = love.graphics.newFont('assets/font.otf', 45)
+   menu.song = love.audio.newSource('assets/octopus-intro-song.mp3')
+   menu.song:setLooping(true)
+   menu.song:play()
 end
 
 function menu.update(state)
@@ -28,7 +31,8 @@ function menu.update(state)
       end
 
       if (key == 'return') or (key == 'space') then
-         menu:change(mainGame) -- Changed because it's probably easier to just pass in playerCount argument than make new gamestate for 2-player
+         menu.song:setVolume(0.2)
+         menu:change(mainGame,menu.one_player_selected) -- Changed because it's probably easier to just pass in playerCount argument than make new gamestate for 2-player
       end
    end
 end
