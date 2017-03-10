@@ -31,14 +31,16 @@ function game.init(state, microphone, changeState)
    state.oldTime = love.timer.getTime()
    state.microphone = microphone
 
+   state.levelData = levelData.create()
+
    state.pause = false
    state.level = scene
    state.level.n = 1
-   state.levelDuration = levelData[state.level.n].duration
+   state.levelDuration = state.levelData[state.level.n].duration
    state.player = entity.create('assets/shitsprites.png', c.PLAYER_X, c.PLAYER_Y)
    state.hud = hud.create(state.player.health, c.HEALTH_X, c.HEALTH_Y)
 
-   state.enemies = levelData[state.level.n].enemies
+   state.enemies = state.levelData[state.level.n].enemies
 
    state.clock = object.create('assets/clock.png', love.graphics.getWidth(), 0) -- spawn off-screen
    state.computer = object.create('assets/recurseLogo.png', c.OBJECT_X, c.PLAYER_Y - state.player.h)
@@ -60,9 +62,10 @@ function game.reset(state)
    state.clock.timer = 0
 
    state.level.n = 1
-   state.levelDuration = levelData[state.level.n].duration
+   state.levelData = levelData.create()
+   state.levelDuration = state.levelData[state.level.n].duration
    state.enemies = nil
-   state.enemies = levelData[state.level.n].enemies
+   state.enemies = state.levelData[state.level.n].enemies
 end
 
 function game.update(state, dt)
@@ -151,16 +154,16 @@ function game.update(state, dt)
    end
 
    if state.levelDuration == 0 then
-      if state.player.score < levelData[state.level.n].minScore then state.player.dead = true
+      if state.player.score < state.levelData[state.level.n].minScore then state.player.dead = true
       elseif love.keyboard.isDown('return') then
          state.level.n = state.level.n + 1
          state.player.x = c.PLAYER_X
          state.player.y = c.PLAYER_Y - state.player.h
          state.player.hasObject = false
          state.computer:reset()
-         state.levelDuration = levelData[state.level.n].duration
+         state.levelDuration = state.levelData[state.level.n].duration
 
-         for i, v in pairs(levelData[state.level.n].enemies) do
+         for i, v in pairs(state.levelData[state.level.n].enemies) do
             table.insert(state.enemies, v)
          end
       end

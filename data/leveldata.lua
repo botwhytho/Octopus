@@ -1,7 +1,10 @@
 local enemy = require('src.entities.enemy')
 local xyMove = require('src.movement.xyMovement')
 
-local levelData = {
+local levelData = {}
+
+function levelData.create()
+   local t = {
    -- Level 1
    {minScore = 0,
    duration = 2,
@@ -38,5 +41,7 @@ local levelData = {
    }
    }
 }
+return t
+end
 
 return levelData
