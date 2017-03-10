@@ -7,6 +7,7 @@ local hud = require('src.hud')
 local xyMove = require('src.movement.xyMovement')
 local exit = require('src.movement.exitScreen')
 local object = require('src.entities.object')
+local levelData = require('data.leveldata')
 
 local function collision(player, others, xTol, yTol)
    -- Negative tolerance value causes bounding box to shrink (less lenient)
@@ -32,17 +33,12 @@ function game.init(state, microphone, changeState)
 
    state.pause = false
    state.level = scene
-   state.level.level = 1
-   state.levelDuration = c.LVL_DURATION
+   state.level.n = 1
+   state.levelDuration = levelData[state.level.n].duration
    state.player = entity.create('assets/shitsprites.png', c.PLAYER_X, c.PLAYER_Y)
    state.hud = hud.create(state.player.health, c.HEALTH_X, c.HEALTH_Y)
 
-   state.enemies = {}
-   table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), 200, xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED)))
-   table.insert(state.enemies, enemy.create('assets/fish2.png', -50, 300, xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED)))
-   table.insert(state.enemies, enemy.create('assets/turtle.png', 400, state.level.groundY))
-   table.insert(state.enemies, enemy.create('assets/hook.png', 200, 150, xyMove.create(0, c.HOOK_YSPEED)))
-   table.insert(state.enemies, enemy.create('assets/hook.png', 620, 250, xyMove.create(0, c.HOOK_YSPEED, nil, -1)))
+   state.enemies = levelData[state.level.n].enemies
 
    state.clock = object.create('assets/clock.png', love.graphics.getWidth(), 0) -- spawn off-screen
    state.computer = object.create('assets/recurseLogo.png', c.OBJECT_X, c.PLAYER_Y - state.player.h)
@@ -51,7 +47,7 @@ end
 
 function game.update(state, dt)
    function love.keypressed(key)
-      if key == "space" then
+      if (key == "space") and state.levelDuration > 0 then
          state.pause = not state.pause
       elseif key == "escape" then
          love.event.quit()
@@ -59,11 +55,11 @@ function game.update(state, dt)
    end
 
    -- 'Pause' game if time runs out
-   if not state.pause and state.levelDuration > 0 then
+   if not state.pause and state.levelDuration >= 1 then
 
       --Level Duration logic
       local new = love.timer.getTime()
-      if new - state.oldTime > 1 then
+      if new - state.oldTime >= 1 then
          state.oldTime = new
          state.levelDuration = state.levelDuration - 1
       end
@@ -109,7 +105,6 @@ function game.update(state, dt)
          end
       end
 
-
       -- Object logic: Computer, pick up if player is 'near enough'
       if collision(state.player, {state.computer}, -10, 10)
       and not state.player.hasObject and not state.goal.hasObject then
@@ -131,21 +126,23 @@ function game.update(state, dt)
 
       -- Handle object drop-off
       state.goal:update(dt)
+   end
 
-   elseif state.levelDuration == 0 then
-      if love.keyboard.isDown('return') then
-         state.level.level = state.level.level + 1
+   if state.levelDuration == 0 then
+      if state.player.score < levelData[state.level.n].minScore then state.player.dead = true
+      elseif love.keyboard.isDown('return') then
+         state.level.n = state.level.n + 1
          state.player.x = c.PLAYER_X
          state.player.y = c.PLAYER_Y - state.player.h
          state.player.hasObject = false
          state.computer:reset()
-         state.levelDuration = c.LVL_DURATION
+         state.levelDuration = levelData[state.level.n].duration
 
-         table.insert(state.enemies, enemy.create('assets/hook.png', love.math.random(5,love.graphics.getWidth()), 150, xyMove.create(0, c.HOOK_YSPEED)))
-         table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), love.math.random(love.graphics.getHeight()*0.25,love.graphics.getHeight()*0.75), xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED)))
+         for i, v in pairs(levelData[state.level.n].enemies) do
+            table.insert(state.enemies, v)
+         end
       end
    end
-
 end
 
 function game.draw(state)
@@ -160,7 +157,7 @@ function game.draw(state)
    state.goal:draw()
    state.clock:draw()
 
-   state.hud:draw(state.player, state.levelDuration, state.pause, state.level.level)
+   state.hud:draw(state.player, state.levelDuration, state.pause, state.level.n)
 end
 
 return game

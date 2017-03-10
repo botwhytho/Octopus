@@ -19,11 +19,7 @@ local function draw(hud, player, levelDuration, paused, lvl)
       x = x + 22
    end
 
-   if player.health < 1 then
-      love.graphics.print({{0,0,0},'Dead'}, love.graphics.getWidth()/2, love.graphics.getHeight()/3)
-   end
-
-   if paused and levelDuration > 0 then
+   if paused then
       -- Dark overlay
       love.graphics.setColor(0, 0, 0, 170)
       love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
@@ -34,7 +30,7 @@ local function draw(hud, player, levelDuration, paused, lvl)
       love.graphics.printf('Paused', 0, love.graphics.getHeight()*0.4, love.graphics.getWidth(), 'center')
       love.graphics.setFont(love.graphics.newFont('assets/GreenFlame.ttf', c.BODY_SIZE))
 
-   elseif levelDuration == 0 then
+   elseif levelDuration == 0 and (not player.dead) then
      -- Dark overlay
      love.graphics.setColor(0, 0, 0, 170)
      love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
@@ -45,6 +41,11 @@ local function draw(hud, player, levelDuration, paused, lvl)
      love.graphics.printf('Your current score is:' .. player.score, 0, love.graphics.getHeight()*0.4, love.graphics.getWidth(), 'center')
      love.graphics.printf('Press Enter to continue', 0, love.graphics.getHeight()*0.45, love.graphics.getWidth(), 'center')
      love.graphics.setFont(love.graphics.newFont('assets/GreenFlame.ttf', c.BODY_SIZE))
+
+   elseif levelDuration == 0 and player.dead then
+     love.graphics.print({{0,0,0},'Time\'s up, you dead'}, love.graphics.getWidth()/2, love.graphics.getHeight()/3)
+   elseif player.dead then
+     love.graphics.print({{0,0,0},'Dead'}, love.graphics.getWidth()/2, love.graphics.getHeight()/3)
    end
 end
 

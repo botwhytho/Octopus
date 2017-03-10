@@ -5,13 +5,13 @@
    c.MIC_AMP_MULTIPLIER = -5
 
    -- Level data
-   c.LVL_DURATION = 30
+   c.LVL_DURATION = 2
    c.GRAVITY = 1200
    c.GROUND_Y = love.graphics.getHeight()/1.2
    c.GOAL_X = love.graphics.getWidth()*.85 + 25
 
    -- Entity Data
-   c.PLAYER_X = 200
+   c.PLAYER_X = 30
    c.PLAYER_Y = c.GROUND_Y
    c.PLAYER_W = 100/2
    c.PLAYER_H = 84/2

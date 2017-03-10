@@ -32,6 +32,7 @@ local function handleCollision(player)
 			player.hasObject = false
 		end
 		player.health = player.health - 1
+		if player.health < 1 then player.dead = true end
 		player.anim.blinking = true
 	end
 end
