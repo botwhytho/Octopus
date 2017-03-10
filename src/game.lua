@@ -7,7 +7,6 @@ local hud = require('src.hud')
 local xyMove = require('src.movement.xyMovement')
 local exit = require('src.movement.exitScreen')
 local object = require('src.entities.object')
--- local c = require('src.constants')
 
 local function collision(player, others, xTol, yTol)
    -- Negative tolerance value causes bounding box to shrink (less lenient)
@@ -90,14 +89,26 @@ function game.update(state, dt)
       end
 
       -- Object logic: Clock
-      if state.clock.x == love.graphics.getWidth() and math.random(c.CLOCK_SPAWN_P) == 2 then
+      -- Clock not in play
+      if state.clock.x == love.graphics.getWidth() then
+         if math.random(c.CLOCK_SPAWN_P) == 2 then
          state.clock:reset(math.random(love.graphics.getWidth() - state.clock.w),
                            math.random(love.graphics.getHeight() - (love.graphics.getHeight() - c.GROUND_Y) - state.clock.h))
+         end
+      -- Clock in play
+      else
+         state.clock.timer = (state.clock.timer or 0) + dt
+         if state.clock.timer > c.CLOCK_LIFETIME then
+            state.clock:reset(love.graphics.getWidth(), 0)
+            state.clock.timer = 0
+         end
+
+         if collision(state.player, {state.clock}, -5, -5) then
+            state.levelDuration = state.levelDuration + 5
+            state.clock:reset(love.graphics.getWidth(), 0)
+         end
       end
-      if collision(state.player, {state.clock}, -5, -5) then
-         state.levelDuration = state.levelDuration + 5
-         state.clock:reset(love.graphics.getWidth(), 0)
-      end
+
 
       -- Object logic: Computer, pick up if player is 'near enough'
       if collision(state.player, {state.computer}, -10, 10)
@@ -120,18 +131,19 @@ function game.update(state, dt)
 
       -- Handle object drop-off
       state.goal:update(dt)
+
    elseif state.levelDuration == 0 then
-     if love.keyboard.isDown('return') then
-       state.level.level = state.level.level + 1
-       state.player.x = c.PLAYER_X
-       state.player.y = c.PLAYER_Y - state.player.h
-       state.player.hasObject = false
-       state.computer:reset()
-       state.levelDuration = c.LVL_DURATION
-       --Both Two Fish and Two hooks are appearing at a time, not sure why. Some parameters need to be tweaked and/or randomized more
-       table.insert(state.enemies, enemy.create('assets/hook.png', love.math.random(5,love.graphics.getWidth()), 150, xyMove.create(0, c.HOOK_YSPEED)))
-       table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), love.math.random(love.graphics.getHeight()*0.25,love.graphics.getHeight()*0.75), xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED)))
-     end
+      if love.keyboard.isDown('return') then
+         state.level.level = state.level.level + 1
+         state.player.x = c.PLAYER_X
+         state.player.y = c.PLAYER_Y - state.player.h
+         state.player.hasObject = false
+         state.computer:reset()
+         state.levelDuration = c.LVL_DURATION
+
+         table.insert(state.enemies, enemy.create('assets/hook.png', love.math.random(5,love.graphics.getWidth()), 150, xyMove.create(0, c.HOOK_YSPEED)))
+         table.insert(state.enemies, enemy.create('assets/fish.png', love.graphics.getWidth(), love.math.random(love.graphics.getHeight()*0.25,love.graphics.getHeight()*0.75), xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED)))
+      end
    end
 
 end
