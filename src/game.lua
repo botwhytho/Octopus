@@ -43,7 +43,7 @@ function game.init(state, microphone, changeState)
    state.enemies = state.levelData[state.level.n].enemies
 
    state.clock = object.create('assets/clock.png', love.graphics.getWidth(), 0) -- spawn off-screen
-   state.computer = object.create('assets/recurseLogo.png', c.OBJECT_X, c.PLAYER_Y - state.player.h)
+   state.computer = object.create('assets/recurseLogo.png', c.OBJECT_X, c.PLAYER_Y)
    state.goal = enemy.create('assets/crab.png', state.level.goalX, state.level.groundY, exit.create(state.level.goalX))
 end
 

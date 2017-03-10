@@ -3,8 +3,6 @@ local hud = {}
 local function draw(hud, player, levelDuration, paused, lvl)
    love.graphics.setFont(hud.small)
    -- Print instantaneous FPS
-   love.graphics.print({{0,0,0},love.timer.getFPS()}, 5, love.graphics.getHeight()-15)
-   -- Print state of dropped object
    love.graphics.printf({{0,0,0},player.hasObject and "Move those Computers!" or "Go grab another server" }, 0, 0, love.graphics.getWidth(), "center")
    -- Print current score
    love.graphics.printf({{0,0,0},"Score: " .. player.score}, c.SCORE_Y, c.HEALTH_Y, love.graphics.getWidth(), "center")

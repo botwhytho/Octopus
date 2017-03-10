@@ -7,7 +7,7 @@
    -- Level data
    c.BACKGROUND_COLOUR = {184, 229, 240 }
    c.GROUND_COLOUR = {250, 236, 199}
-   c.LVL_DURATION = 10
+   c.LVL_DURATION = 40
    c.GRAVITY = 1200
    c.GROUND_Y = love.graphics.getHeight()/1.2
    c.GOAL_X = love.graphics.getWidth()*.85 + 25

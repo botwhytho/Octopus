@@ -6,7 +6,7 @@ local levelData = {}
 function levelData.create()
    local t = {
    -- Level 1
-   {minScore = 0,
+   {minScore = 5,
    duration = c.LVL_DURATION,
    enemies = {
       enemy.create('assets/fish.png', love.graphics.getWidth(), 200, xyMove.create(c.FISH_XSPEED, c.FISH_YSPEED)),
