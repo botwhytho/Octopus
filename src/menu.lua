@@ -6,6 +6,7 @@ function menu.init(menu, device, changeState)
    menu.mic = device
    menu.change = changeState
    menu.one_player_selected = true
+   menu.octo = love.graphics.newImage('assets/octopus_intro.png')
 
    local font = love.graphics.newFont('assets/LadyRadical.ttf', 50)
    love.graphics.setFont(font)
@@ -31,6 +32,8 @@ end
 function menu.draw(state)
    love.graphics.setColor(100, 130, 255)
    love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+
+   love.graphics.draw(menu.octo,love.graphics.getWidth()/2-menu.octo:getWidth()/4,love.graphics.getHeight()/2-menu.octo:getHeight()/4,0,0.5,0.5)
 
    local amplitude_to_alpha = math.floor((menu.mic:poll() or 1)/100*255-0.5)+75 --Turning amplitude to alpha
    love.graphics.setColor(255, 255,255, amplitude_to_alpha)
